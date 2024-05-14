@@ -139,7 +139,7 @@ hierNest = function(x, y,
                     lambda=NULL,
                     pf_group=NULL,
                     pf_sparse=NULL,
-                    intercept=TRUE,
+                    intercept=FALSE,
                     asparse1=1,
                     asparse2=0.05,
                     standardize=TRUE,
@@ -184,14 +184,38 @@ hierNest = function(x, y,
       
       p=NCOL(x)
       
-      x.design=matrix(nrow = NROW(x),ncol = NCOL(iden_matrix)*(p+1)-1)
+      design=(t(khatri_rao(t(iden_matrix),t(cbind(matrix(rep(1,NROW(x)),ncol = 1),x)))))
       
-      x.design[,1:(NCOL(iden_matrix)-1)]= (t(khatri_rao(t(iden_matrix),t(matrix(rep(1,NROW(x)),ncol = 1)))) )[,-1]
       
-      for(i in 1:p){
-        x.design[,(i*NCOL(iden_matrix)):((i+1)*NCOL(iden_matrix)-1)]=(t(khatri_rao(t(iden_matrix),t(x[,i]))))
+      
+      
+      
+      
+      trans_design.inx=1:NCOL(design)
+      
+      
+      for(i in 1:(p+1)){
+        for(j in 1:NCOL(iden_matrix)){
+          trans_design.inx[(i-1)*NCOL(iden_matrix)+j]=(j-1)*(p+1)+i
+        }
       }
       
+      x.design=design[,trans_design.inx]
+      #x.design=design[,trans_design.inx][,-1]
+     
+      
+      # 
+      # 
+      # x.design=matrix(nrow = NROW(x),ncol = NCOL(iden_matrix)*(p+1)-1)
+      # 
+      # x.design[,1:(NCOL(iden_matrix)-1)]= (t(khatri_rao(t(iden_matrix),t(matrix(rep(1,NROW(x)),ncol = 1)))) )[,-1]
+      # 
+      # for(i in 1:p){
+      #   x.design[,(i*NCOL(iden_matrix)):((i+1)*NCOL(iden_matrix)-1)]=(t(khatri_rao(t(iden_matrix),t(x[,i]))))
+      # }
+      # 
+      # 
+      # 
       
 
       cn=max(hier_info[,1])*(p+1)
@@ -208,16 +232,16 @@ hierNest = function(x, y,
         drgiy[(i*length(drgiy_single)+1):((i+1)*length(drgiy_single))]=drgiy_single+i*ncol_single
       }
       
-      drgix=drgix-1
-      drgiy=drgiy-1
-      
+      # drgix=drgix-1
+      # drgiy=drgiy-1
+      # 
       
       cn_s=(1:(p+1))*max(hier_info[,1])-max(hier_info[,1])+1
       cn_e=(1:(p+1))*max(hier_info[,1])
       
       
       group_use=rep(1:(p+1), each=ncol_single)
-      group_use=group_use[-1]
+      #group_use=group_use[-1]
       
       
       bs <- as.integer(as.numeric(table(group_use)))
@@ -257,8 +281,9 @@ hierNest = function(x, y,
       #                    lower_bnd=lower_bnd,upper_bnd=upper_bnd,
       #                    eps=eps,maxit=maxit)
       
+      x.design.spars=as(x.design,"sparseMatrix")
       
-      res=overlapping_gl(x.design,y,
+      res=hierNest::overlapping_gl(x.design.spars,y,
                          group =group_use,
                          family=family,
                          cn=cn,

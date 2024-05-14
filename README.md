@@ -1,8 +1,11 @@
 # Example for hierNest version 1
 
 ``` r
-library(hierNest)
-library(rTensor)
+library(hierNest) 
+# If you do not want to build the package from the source code, you can install the package directly from the "hierNest_1.0.2.tar" file. 
+library(rTensor) 
+# For now, this is necessary for our method. Will fix this later to auto load the package.
+
 ## Load the example data with 2 MDC groups with 2 DRGs for each MDC. 
 data=readRDS("./example_data.Rdata")
 
