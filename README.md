@@ -3,7 +3,7 @@
 ``` r
 library(hierNest)
 library(rTensor)
-## Load the example data with 4 MDC groups with 4 DRGs for each MDC. 
+## Load the example data with 2 MDC groups with 2 DRGs for each MDC. 
 data=readRDS("./example_data.Rdata")
 
 
@@ -13,8 +13,8 @@ fit1=hierNest::hierNest(data$X,
                         method="overlapping",  ## Overlapping group lasso method
                         hier_info=data$hier_info,  ## Should input the hierarchical information for the groups
                         random_asparse = TRUE,  ## Randomly draw the other two tuning parameter?
-                        nlambda=100,
-                        intercept = FALSE,  ## Set intercept = FALSE can potentially save a huge amount of time
+                        nlambda=100,  ## You may choose a larger value in order to gain more flexibility
+                        intercept = FALSE,  ## !!! Set intercept = FALSE can potentially save a huge amount of time
                         family="binomial")
 ```
 
@@ -40,8 +40,8 @@ print(tt2-tt1)
 ## Cross validation for choosing the lambda parameter
 cv.fit=cv.hierNest(data$X,data$Y,method="overlapping",hier_info=data$hier_info,family="binomial",
                    partition = "subgroup",
-                   asparse1=fit1$asparse1,asparse2=fit1$asparse2,
-                   nlambda = 100,intercept = FALSE)  ## Should input the tuning parameters asparse1 & asparse2 in order to be consistent
+                   asparse1=fit1$asparse1,asparse2=fit1$asparse2, ## Should input the tuning parameters asparse1 & asparse2 in order to be consistent
+                   nlambda = 100,intercept = FALSE)  
 ```
 
 ```         
@@ -72,7 +72,7 @@ cv.fit=cv.hierNest(data$X,data$Y,method="overlapping",hier_info=data$hier_info,f
 ```
 
 ``` r
-## Estimated coefficients for the selected lambda value
+## Estimated coefficients with the selected lambda value
 fit1$beta[,order(abs(fit1$lambda-cv.fit$lambda.min))[1]]
 ```
 
