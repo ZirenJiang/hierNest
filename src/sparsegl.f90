@@ -156,6 +156,9 @@ SUBROUTINE sparse_four (bn,bs,ix,iy,gam,nobs,nvars,x,y,pf,pfl1,dfmax,pmax,nlam,&
            maxDif = 0.0D0
            isDifZero = 0 !Boolean to check if b-oldb nonzero. Unnec, in fn.
            DO g = 1, bn
+              IF (intr == 0) THEN
+                is_in_E_set(1)=1
+              ENDIF
               IF (is_in_E_set(g) == 0) CYCLE
               startix = ix(g)
               endix = iy(g)
@@ -449,6 +452,9 @@ SUBROUTINE spmat_four (bn,bs,ix,iy,gam,nobs,nvars,x,xidx,xcptr,nnz,y,pf,pfl1,&
            maxDif = 0.0D0
            isDifZero = 0 !Boolean to check if b-oldb nonzero. Unnec, in fn.
            DO g = 1, bn
+              IF (intr == 0) THEN
+                is_in_E_set(1)=1
+              ENDIF
               IF (is_in_E_set(g) == 0) CYCLE
               startix = ix(g)
               endix = iy(g)

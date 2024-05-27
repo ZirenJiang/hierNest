@@ -95,9 +95,12 @@ sgl_ls_my <- function(
   # output
   outlist <- getoutput(x, group, fit, maxit, pmax, nvars, vnames, eps)
   if (standardize) outlist$beta <- outlist$beta * xs
+
   if (intr) {
     outlist$b0 <- outlist$b0 + ym
   } else {
+    outlist$beta[1,1]=mean(y)
+    #outlist$b0 <- outlist$b0
     outlist$b0 <- rep(0, dim(outlist$beta)[2])
   }
   outlist$npasses <- fit$npass
@@ -106,6 +109,7 @@ sgl_ls_my <- function(
   outlist$mse <- fit$mse[seq(fit$nalam)]
   outlist$dev.ratio <- 1 - outlist$mse / nulldev
   outlist$nulldev <- nulldev
+  outlist$gamma=gamma
   class(outlist) <- c("lsspgl")
   outlist
 }

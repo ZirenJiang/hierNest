@@ -18,6 +18,7 @@ sgl_logit <- function(
                   "observations; dangerous ground"))
   # TODO, enable prediction with class labels if factor is passed
   if (intr == 1L && flmin < 1) b0_first <- coef(glm(y ~ 1, family = binomial()))
+  b0_first <- coef(glm(y ~ 1, family = binomial()))
   y <- 2 * (as.integer(y) - 1) - 1 # convert to -1 / 1
 
   is.sparse <- FALSE
@@ -101,9 +102,17 @@ sgl_logit <- function(
   }
   # output
   outlist <- getoutput(x, group, fit, maxit, pmax, nvars, vnames, eps)
+  #outlist$beta_ori=outlist$beta
+  #print(outlist$b0)
   if (standardize) outlist$beta <- outlist$beta * xs
 
+  if(intr!=1){
+    outlist$beta[1,1]=b0_first
+  }
   outlist$b0 <- matrix(outlist$b0, nrow = 1)
+  outlist$gamma=gamma
+  #outlist$y=y
+  #outlist$xs=xs
   if (intr == 1L && flmin < 1) outlist$b0[1] <- b0_first
   outlist <- c(
     outlist,

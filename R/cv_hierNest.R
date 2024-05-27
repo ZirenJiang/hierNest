@@ -131,7 +131,7 @@
 #' fit_pois <- sparsegl(X, yp, group = groups, family = poisson())
 #' 
 #' 
-cv.hierNest = function(x, y, 
+cv.hierNest.test = function(x, y, 
                     group = NULL,
                     family = c("gaussian", "binomial"),
                     nlambda=100,
@@ -143,6 +143,8 @@ cv.hierNest = function(x, y,
                     intercept=TRUE,
                     asparse1=c(0.5,20),
                     asparse2=c(0.01,0.2),
+                    asparse1_num=4,
+                    asparse2_num=4,
                     standardize=TRUE,
                     lower_bnd = -Inf,
                     upper_bnd = Inf,
@@ -186,16 +188,25 @@ cv.hierNest = function(x, y,
       
       p=NCOL(x)
       
-      x.design=matrix(nrow = NROW(x),ncol = NCOL(iden_matrix)*(p+1)-1)
+      design=(t(khatri_rao(t(iden_matrix),t(cbind(matrix(rep(1,NROW(x)),ncol = 1),x)))))
       
-      x.design[,1:(NCOL(iden_matrix)-1)]= (t(khatri_rao(t(iden_matrix),t(matrix(rep(1,NROW(x)),ncol = 1)))) )[,-1]
       
-      for(i in 1:p){
-        x.design[,(i*NCOL(iden_matrix)):((i+1)*NCOL(iden_matrix)-1)]=(t(khatri_rao(t(iden_matrix),t(x[,i]))))
+      
+      
+      
+      
+      trans_design.inx=1:NCOL(design)
+      
+      
+      for(i in 1:(p+1)){
+        for(j in 1:NCOL(iden_matrix)){
+          trans_design.inx[(i-1)*NCOL(iden_matrix)+j]=(j-1)*(p+1)+i
+        }
       }
       
+      x.design=design[,trans_design.inx]
       
-
+      
       cn=max(hier_info[,1])*(p+1)
       drgix=1:cn
       drgiy=1:cn
@@ -210,20 +221,20 @@ cv.hierNest = function(x, y,
         drgiy[(i*length(drgiy_single)+1):((i+1)*length(drgiy_single))]=drgiy_single+i*ncol_single
       }
       
-      drgix=drgix-1
-      drgiy=drgiy-1
-      
+      # drgix=drgix-1
+      # drgiy=drgiy-1
+      # 
       
       cn_s=(1:(p+1))*max(hier_info[,1])-max(hier_info[,1])+1
       cn_e=(1:(p+1))*max(hier_info[,1])
       
       
       group_use=rep(1:(p+1), each=ncol_single)
-      group_use=group_use[-1]
+      #group_use=group_use[-1]
       
       
       bs <- as.integer(as.numeric(table(group_use)))
-     
+      
       
       if(is.null(pf_group)){
         pf_group=sqrt(bs)
@@ -242,22 +253,8 @@ cv.hierNest = function(x, y,
       }
       
       
-      # res=overlapping_gl(x.design,y,
-      #                    group =group_use,
-      #                    family=family,
-      #                    cn=cn,
-      #                    drgix=drgix,
-      #                    drgiy=drgiy,
-      #                    cn_s=cn_s,
-      #                    cn_e=cn_e,
-      #                    intercept = intercept,
-      #                    random_asparse = random_asparse,
-      #                    nlambda=nlambda,lambda.factor=lambda.factor,lambda=lambda,
-      #                    pf_group=pf_group,pf_sparse=pf_sparse,
-      #                    asparse1=asparse1,asparse2=asparse2,
-      #                    standardize=standardize,
-      #                    lower_bnd=lower_bnd,upper_bnd=upper_bnd,
-      #                    eps=eps,maxit=maxit)
+      x.design.spars=as(x.design,"sparseMatrix")
+      
       
       
       subgroupnumber=1:max(hier_info[,2])
@@ -267,7 +264,8 @@ cv.hierNest = function(x, y,
       }
       
       if(cvmethod=="general"){
-        res=hierNest::cv.sparsegl(x.design,y,
+        
+        res=hierNest::cv.sparsegl(x.design.spars,y,
                                   group =group_use,family=family,
                                   cn=cn,
                                   drgix=drgix,
@@ -283,10 +281,85 @@ cv.hierNest = function(x, y,
                                   standardize=standardize,
                                   lower_bnd=lower_bnd,upper_bnd=upper_bnd,
                                   eps=eps,maxit=maxit)
+        
+        
       }
       
       
       if(cvmethod=="grid_search"){
+        
+        log_asp1=log(asparse1)
+        log_asp2=log(asparse2)
+        
+        
+        if(asparse1_num==1){
+          asparse1_base=exp(mean(log_asp1))
+        }else{
+          if(asparse1_num==2){
+            asparse1_base=c(exp(log_asp1[1]),exp(log_asp1[2]))
+          }else{
+            asparse1_base=1:asparse1_num
+            asparse1_base[1]=exp(log_asp1[1])
+            asparse1_base[asparse1_num]=exp(log_asp1[2])
+            for(i in 1:(asparse1_num-2)){
+              asparse1_base[i+1]=exp(log_asp1[1]+i*(log_asp1[2]-log_asp1[1])/(asparse1_num-1))
+            }
+            
+          }
+        }
+        
+        
+        if(asparse2_num==1){
+          asparse2_base=exp(mean(log_asp2))
+        }else{
+          if(asparse2_num==2){
+            asparse2_base=c(exp(log_asp2[1]),exp(log_asp2[2]))
+          }else{
+            asparse2_base=1:asparse2_num
+            asparse2_base[1]=exp(log_asp2[1])
+            asparse2_base[asparse2_num]=exp(log_asp2[2])
+            for(i in 1:(asparse2_num-2)){
+              asparse2_base[i+1]=exp(log_asp2[1]+i*(log_asp2[2]-log_asp2[1])/(asparse2_num-1))
+            }
+            
+          }
+        }
+        
+        
+        nlambda_single=round(nlambda/(asparse1_num*asparse2_num))
+        
+        
+        res_min=c()
+        res_return=list()
+        for(n1 in 1:asparse1_num){
+          for(n2 in 1:asparse2_num){
+            res_trans=hierNest::cv.sparsegl(x.design.spars,y,
+                                            group =group_use,family=family,
+                                            cn=cn,
+                                            drgix=drgix,
+                                            drgiy=drgiy,
+                                            cn_s=cn_s,
+                                            cn_e=cn_e,
+                                            intercept = intercept,
+                                            pred.loss =pred.loss,
+                                            subgroupnumber=subgroupnumber,partition = partition,
+                                            asparse1=asparse1_base[n1],asparse2=asparse2_base[n2],
+                                            nlambda=nlambda_single,lambda.factor=lambda.factor,lambda=lambda,
+                                            pf_group=pf_group,pf_sparse=pf_sparse,
+                                            standardize=standardize,
+                                            lower_bnd=lower_bnd,upper_bnd=upper_bnd,
+                                            eps=eps,maxit=maxit)
+            res_min=c(res_min,res_trans$cvmin)
+            res_return=c(res_return,list(res_trans))
+          }
+        }
+        
+        
+        min_inx=order(res_min)[1]
+        
+        res=res_return[[min_inx]]
+        
+        
         
         
         

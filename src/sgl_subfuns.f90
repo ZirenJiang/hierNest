@@ -17,7 +17,7 @@ MODULE sgl_subfuns
       !z = tlam * (1 - alsparse)
       z = tlam
       DO g = 1, k
-         IF (is_in_E_set(g) == 1) CYCLE
+         IF (is_in_E_set(g) .EQ. 1) CYCLE
          IF (ga(g) > pf(g) * z) is_in_E_set(g) = 1
       ENDDO
       RETURN
@@ -46,10 +46,10 @@ MODULE sgl_subfuns
       INTEGER:: drgiy(cn)
       INTEGER:: cn_s(bn)
       INTEGER:: cn_e(bn),drginxsub
-      DOUBLE PRECISION, DIMENSION (0:nvars), INTENT(inout) :: b
+      DOUBLE PRECISION, DIMENSION (0:nvars), INTENT(in) :: b
             
       DO g = 1, bn
-         IF (is_in_E_set(g) == 1) CYCLE
+         IF (is_in_E_set(g) .EQ. 1) CYCLE
          startix = ix(g)
          endix = iy(g)
          
@@ -150,9 +150,23 @@ MODULE sgl_subfuns
          DO k = startix, endix
             b(k) = MIN(MAX(lb, b(k)), ub)
          ENDDO
+         
+         IF(startix.EQ.1) THEN
+            b(1)=s(1)
+         ENDIF
+         
       ELSE
          b(startix:endix) = 0.0D0
+         
+         IF(startix.EQ.1) THEN
+            b(1)=s(1)
+         ENDIF
+         
       ENDIF
+      
+      
+      
+      
       ALLOCATE(dd(bsg))
       dd = b(startix:endix) - oldb
       IF (ANY(dd .ne. 0.0D0)) THEN
@@ -197,7 +211,7 @@ MODULE sgl_subfuns
       
       violation = 0
       DO g = 1, bn
-         IF (is_in_S_set(g) == 1) THEN
+         IF (is_in_S_set(g) .EQ. 1) THEN
             startix = ix(g)
             endix = iy(g)
             
@@ -241,7 +255,7 @@ MODULE sgl_subfuns
             DEALLOCATE(s)
             DEALLOCATE(theta_tilt)
                      
-            IF (is_in_E_set(g) == 1) CYCLE
+            IF (is_in_E_set(g) .EQ. 1) CYCLE
             IF (ga(g) > pf(g)*lama1) THEN
                is_in_E_set(g) = 1
                violation = 1
@@ -325,6 +339,12 @@ MODULE sgl_subfuns
       ELSE
          b(startix:endix) = 0.0D0
       ENDIF
+      
+      IF(startix.EQ.1) THEN
+         b(1)=s(1)
+      ENDIF
+         
+         
       ALLOCATE(dd(bsg))
       dd = b(startix:endix) - oldb
       IF(ANY(dd .ne. 0.0D0)) THEN
@@ -373,7 +393,7 @@ MODULE sgl_subfuns
 
       violation = 0
       DO g = 1, bn
-         IF(is_in_S_set(g) == 1) THEN
+         IF(is_in_S_set(g) .EQ. 1) THEN
             startix = ix(g)
             endix = iy(g)
             ALLOCATE(s(bs(g)))
@@ -414,7 +434,7 @@ MODULE sgl_subfuns
             DEALLOCATE(theta_tilt)
             
             
-            IF(is_in_E_set(g) == 1) CYCLE
+            IF(is_in_E_set(g) .EQ. 1) CYCLE
             IF(ga(g) > pf(g) * lama1) THEN
                is_in_E_set(g) = 1
                violation = 1

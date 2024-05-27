@@ -1,12 +1,10 @@
-# Example for hierNest version 1
+Guidance of hierNest version 1
+================
 
 ``` r
-library(hierNest) 
-# If you do not want to build the package from the source code, you can install the package directly from the "hierNest_1.0.2.tar" file. 
-library(rTensor) 
-# For now, this is necessary for our method. Will fix this later to auto load the package.
-
-## Load the example data with 2 MDC groups with 2 DRGs for each MDC. 
+library(hierNest)
+library(rTensor)
+## Load the example data with 4 MDC groups with 4 DRGs for each MDC. 
 data=readRDS("./example_data.Rdata")
 
 
@@ -16,156 +14,81 @@ fit1=hierNest::hierNest(data$X,
                         method="overlapping",  ## Overlapping group lasso method
                         hier_info=data$hier_info,  ## Should input the hierarchical information for the groups
                         random_asparse = TRUE,  ## Randomly draw the other two tuning parameter?
-                        nlambda=100,  ## You may choose a larger value in order to gain more flexibility
-                        intercept = FALSE,  ## !!! Set intercept = FALSE can potentially save a huge amount of time
+                        nlambda=100,
+                        intercept = FALSE,  ## Set intercept = FALSE can potentially save a huge amount of time
                         family="binomial")
 ```
 
-```         
-## Warning: Randomly select penalty factor 1
+    ## Warning: Randomly select penalty factor 1
 
-## Warning: Randomly select penalty factor 2
+    ## Warning: Randomly select penalty factor 2
 
-## [1] "-----------asasa-----------"
-## [1] "logit_sparse"
-```
+    ## [1] "-----------asasa-----------"
+    ## [1] "logit_sparse"
 
 ``` r
 tt2=Sys.time()
 print(tt2-tt1)
 ```
 
-```         
-## Time difference of 1.734255 secs
-```
+    ## Time difference of 0.82551 secs
+
+## The following show two ways of cross-validation
+
+Since our model have three tuning parameters
+$\lambda, \alpha_1, \alpha_2$ that need to be selected through
+cross-validation, the following implements two ways of cross-validation.
+
+### Method 1: general cross-validation method
+
+The first method randomly select $\alpha_1, \alpha_2$ corresponding to
+each $\lambda$ value. Then, through the cross-validation, we select the
+optimal combination of ($\lambda, \alpha_1, \alpha_2$) that produce
+smallest MSE (or other loss).
 
 ``` r
 ## Cross validation for choosing the lambda parameter
-cv.fit=cv.hierNest(data$X,data$Y,method="overlapping",hier_info=data$hier_info,family="binomial",
-                   partition = "subgroup",
-                   asparse1=fit1$asparse1,asparse2=fit1$asparse2, ## Should input the tuning parameters asparse1 & asparse2 in order to be consistent
+cv.fit1=cv.hierNest(data$X,data$Y,method="overlapping",# For now, we only wrap-up the overlapping group lasso method in this function
+                   hier_info=data$hier_info,family="binomial",
+                   partition = "subgroup", # partition = "subgroup" make sure the each n-fold is sampled within the subgroups to avoid extreme cases
+                   cvmethod = "general", # cvmethod = "general" indicate the first cross-validation method
+                   asparse1=fit1$asparse1,asparse2=fit1$asparse2, ## Should input the tuning parameters asparse1 & asparse2 in order to be consistent with the model "fit1"
                    nlambda = 100,intercept = FALSE)  
+
+
+## Estimated coefficients for the selected lambda value
+
+
+# fit1$beta[,order(abs(fit1$lambda-cv.fit1$lambda.min))[1]]
 ```
 
-```         
-## [1] "-----------asasa-----------"
-## [1] "CHECK!!!!"
-## [1] "binomial leave out"
-## [1] "-----------asasa-----------"
-## [1] "CHECK!!!!"
-## [1] "-----------asasa-----------"
-## [1] "CHECK!!!!"
-## [1] "-----------asasa-----------"
-## [1] "CHECK!!!!"
-## [1] "-----------asasa-----------"
-## [1] "CHECK!!!!"
-## [1] "-----------asasa-----------"
-## [1] "CHECK!!!!"
-## [1] "-----------asasa-----------"
-## [1] "CHECK!!!!"
-## [1] "-----------asasa-----------"
-## [1] "CHECK!!!!"
-## [1] "-----------asasa-----------"
-## [1] "CHECK!!!!"
-## [1] "-----------asasa-----------"
-## [1] "CHECK!!!!"
-## [1] "-----------asasa-----------"
-## [1] "CHECK!!!!"
-## [1] "cverror_binomial"
-```
+### Method 2: grid search cross-validation method
+
+The second method evenly select several grid points in the (predefined)
+region of ($\alpha_1, \alpha_2$), each grid point represent a
+combination of $\alpha_1$ and $\alpha_2$. Then, for each grid point, we
+run our method with a shorter lambda sequence. We select the optimal
+value of ($\lambda, \alpha_1, \alpha_2$) that produce smallest MSE (or
+other loss) through cross-validation.
+
+Note that, this type of cross-validation will generate different lambda
+sequence compared with the previous fit1 model. Therefore, we need to
+re-run our method with the selected value of
+($\lambda, \alpha_1, \alpha_2$)
 
 ``` r
-## Estimated coefficients with the selected lambda value
-fit1$beta[,order(abs(fit1$lambda-cv.fit$lambda.min))[1]]
-```
+cv.fit2=cv.hierNest(data$X,data$Y,method="overlapping",# For now, we only wrap-up the overlapping group lasso method in this function
+                   hier_info=data$hier_info,family="binomial",
+                   partition = "subgroup", # partition = "subgroup" make sure the each n-fold is sampled within the subgroups to avoid extreme cases
+                   cvmethod = "grid_search", # cvmethod = "grid_search" indicate the second cross-validation method
+                   asparse1 = c(0.5,20),asparse2 = c(0.05,0.20), # For the second method, need to input the upper and lower bounds of alpha_1 and alpha_2
+                   asparse1_num = 5,asparse2_num = 5, # number of grids for alpha_1 and alpha_2, total 25 grids will be selected
+                   nlambda = 100,intercept = FALSE)
 
-```         
-##            V1            V2            V3            V4            V5 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##            V6            V7            V8            V9           V10 
-##  0.0000000000  0.0000000000  0.0389469386 -0.0379724407  0.0182641265 
-##           V11           V12           V13           V14           V15 
-## -0.1126783150  0.0791940860  0.0341012656  0.1267014272 -0.1376334985 
-##           V16           V17           V18           V19           V20 
-## -0.0236881233 -0.0506409201  0.0000000000  0.0000000000  0.0000000000 
-##           V21           V22           V23           V24           V25 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##           V26           V27           V28           V29           V30 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##           V31           V32           V33           V34           V35 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##           V36           V37           V38           V39           V40 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##           V41           V42           V43           V44           V45 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##           V46           V47           V48           V49           V50 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0012128881 
-##           V51           V52           V53           V54           V55 
-## -0.0199914240 -0.0007773248 -0.0313130018  0.0318083849  0.0061276537 
-##           V56           V57           V58           V59           V60 
-##  0.0629263495 -0.1376981471 -0.0247526148 -0.0146527894 -0.0332626607 
-##           V61           V62           V63           V64           V65 
-##  0.0000000000  0.2052553506 -0.2127985101 -0.1215317944 -0.0279510116 
-##           V66           V67           V68           V69           V70 
-## -0.0034818356 -0.0590588932 -0.0199979992  0.0742689696 -0.0910635962 
-##           V71           V72           V73           V74           V75 
-##  0.0540805082  0.1241736342  0.1355857534  0.1054910832 -0.0024754792 
-##           V76           V77           V78           V79           V80 
-## -0.0050163200  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##           V81           V82           V83           V84           V85 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##           V86           V87           V88           V89           V90 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##           V91           V92           V93           V94           V95 
-##  0.0000000000  0.0301028740  0.0066926709 -0.0107242553  0.0260847326 
-##           V96           V97           V98           V99          V100 
-##  0.0087503214 -0.0096183797  0.0414410534 -0.3203240911 -0.3131287570 
-##          V101          V102          V103          V104          V105 
-## -0.1238903555 -0.4740674789  0.0323672601  0.2076909350 -0.1233918933 
-##          V106          V107          V108          V109          V110 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##          V111          V112          V113          V114          V115 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##          V116          V117          V118          V119          V120 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##          V121          V122          V123          V124          V125 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##          V126          V127          V128          V129          V130 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##          V131          V132          V133          V134          V135 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##          V136          V137          V138          V139          V140 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##          V141          V142          V143          V144          V145 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##          V146          V147          V148          V149          V150 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##          V151          V152          V153          V154          V155 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000 -0.0588773012 
-##          V156          V157          V158          V159          V160 
-## -0.0005935428  0.0773500566 -0.0779709419 -0.0229274090  0.0000000000 
-##          V161          V162          V163          V164          V165 
-## -0.0482021972  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##          V166          V167          V168          V169          V170 
-##  0.0000000000  0.0000000000  0.0000000000  0.0746136181  0.0000000000 
-##          V171          V172          V173          V174          V175 
-##  0.0000000000  0.0000000000  0.0684428826  0.1269835119 -0.0072017598 
-##          V176          V177          V178          V179          V180 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##          V181          V182          V183          V184          V185 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##          V186          V187          V188          V189          V190 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##          V191          V192          V193          V194          V195 
-##  0.0000000000  0.0000000000  0.0000000000  0.0000000000  0.0000000000 
-##          V196          V197          V198          V199          V200 
-##  0.0000000000  0.0533193373  0.0192880407  0.0309221065  0.0082821223 
-##          V201          V202          V203          V204          V205 
-##  0.0000000000  0.0000000000  0.0000000000  0.1059018668  0.0000000000 
-##          V206          V207          V208          V209          V210 
-##  0.0000000000  0.0000000000  0.0554030942  0.0614941663  0.0452568354 
-##          V211          V212          V213          V214          V215 
-##  0.0428685802  0.0000000000  0.0000000000  0.0000000000  0.1173138616 
-##          V216          V217 
-##  0.1433806057  0.0086040699
+
+fit.selected=hierNest::hierNest(data$X,data$Y,method="overlapping", hier_info=data$hier_info,family="binomial",
+                   asparse1 = cv.fit2$sparsegl.fit$asparse1, # Need to input selected alpha_1
+                   asparse2 = cv.fit2$sparsegl.fit$asparse2, # Need to input selected alpha_2
+                   lambda = cv.fit2$lambda.min, # Selected lambda value
+                   intercept = FALSE)
 ```

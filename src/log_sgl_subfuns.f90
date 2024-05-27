@@ -12,6 +12,7 @@ CONTAINS
       INTEGER, INTENT(in) :: bsg, nobs, nvars
       INTEGER, INTENT(in) :: startix, endix
       DOUBLE PRECISION :: gamg
+      DOUBLE PRECISION :: ss
       DOUBLE PRECISION, INTENT(inout) :: maxDif
       DOUBLE PRECISION, DIMENSION (:), ALLOCATABLE :: oldb, s, dd
       DOUBLE PRECISION, DIMENSION (0:nvars), INTENT(inout) :: b
@@ -36,6 +37,7 @@ CONTAINS
       oldb = b(startix:endix)
       s = MATMUL(y/(1.0D0+exp(r)), x(:, startix:endix))/nobs
       s = s*t_for_sg + b(startix:endix)
+      
       
       
       s_endinx = endix-startix+1
@@ -67,9 +69,21 @@ CONTAINS
          DO k = startix, endix
             b(k) = MIN(MAX(lb, b(k)), ub)
          ENDDO
+         !IF(startix .EQ. 1) THEN
+         !   b(1)=s(1)
+         !ENDIF
       ELSE
          b(startix:endix) = 0.0D0
+         !IF(startix .EQ. 1) THEN
+         !   b(1)=s(1)
+         !ENDIF
       ENDIF
+      
+      IF(startix .EQ. 1) THEN
+         b(1)= s(1)
+      ENDIF
+      
+      
       ALLOCATE(dd(bsg))
       dd = b(startix:endix) - oldb
       IF (ANY(ABS(dd) > 0.0D0)) THEN
@@ -156,9 +170,20 @@ CONTAINS
          DO k = startix, endix
             b(k) = MIN(MAX(b(k), lb), ub)
          ENDDO
+         IF(startix.EQ.1) THEN
+             b(1)=s(1)
+          ENDIF
       ELSE
+        
          b(startix:endix) = 0.0D0
+         IF(startix.EQ.1) THEN
+            b(1)=s(1)
+         ENDIF
       ENDIF
+      
+      
+      
+      
       ALLOCATE(dd(bsg))
       dd = b(startix:endix) - oldb
       IF(ANY(ABS(dd) > 0.0D0)) THEN

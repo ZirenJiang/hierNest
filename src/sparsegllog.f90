@@ -85,6 +85,8 @@ SUBROUTINE log_sparse_four (bn,bs,ix,iy,gam,nobs,nvars,x,y,pf,pfl1,dfmax,pmax,&
   oldbeta = 0.0D0
   activeGroup = 0
   activeGroupIndex = 0
+  
+  
   npass = 0
   ni = 0
   alf = 0.0D0
@@ -159,6 +161,10 @@ SUBROUTINE log_sparse_four (bn,bs,ix,iy,gam,nobs,nvars,x,y,pf,pfl1,dfmax,pmax,&
            maxDif = 0.0D0
            isDifZero = 0 !Boolean to check if b-oldb nonzero. Unnec, in fn.
            DO g = 1, bn
+              IF (intr == 0) THEN
+                is_in_E_set(1)=1
+              ENDIF
+              
               IF (is_in_E_set(g) == 0) CYCLE
               startix = ix(g)
               endix = iy(g)
@@ -169,6 +175,8 @@ SUBROUTINE log_sparse_four (bn,bs,ix,iy,gam,nobs,nvars,x,y,pf,pfl1,dfmax,pmax,&
               CALL log_update_step(bs(g), startix, endix, b, lama1, lama2,lama3, t_for_s(g), pf(g),&
                    pfl1(startix:endix), x,y, isDifZero, nobs, r, gam(g), maxDif, nvars,&
                    lb(g), ub(g),startsubgp, endsubgp, drgix, drgiy, drgdim=cn)
+                   
+            
               IF (activeGroupIndex(g) == 0 .AND. isDifZero == 1) THEN
                  ni = ni + 1
                  IF (ni > pmax) EXIT
@@ -178,6 +186,7 @@ SUBROUTINE log_sparse_four (bn,bs,ix,iy,gam,nobs,nvars,x,y,pf,pfl1,dfmax,pmax,&
            ENDDO
            IF (intr /= 0) THEN
               d = sum(y/(1.0D0+exp(r)))
+              !!!!!!!!!!!!d = 4.0D0*d/nobs
               d = 4.0D0*d/nobs
               IF (d /= 0.0D0) THEN
                  b(0) = b(0) + d
@@ -272,12 +281,15 @@ SUBROUTINE log_sparse_four (bn,bs,ix,iy,gam,nobs,nvars,x,y,pf,pfl1,dfmax,pmax,&
         jerr = -10000 - l
         EXIT
      ENDIF
+     
      IF (ni > 0) THEN
         DO j = 1, ni
            g = activeGroup(j)
            beta(ix(g):iy(g),l) = b(ix(g):iy(g))
         ENDDO
+        
      ENDIF
+     !beta(1,l) = b(1)
      b0(l) = b(0)
      nbeta(l) = ni
      alam(l) = al
@@ -462,6 +474,9 @@ SUBROUTINE log_spmat_four (bn,bs,ix,iy,gam,nobs,nvars,x,xidx,xcptr,nnz,y,pf,pfl1
            maxDif = 0.0D0
            isDifZero = 0 ! Boolean to check if b-oldb nonzero. Unnec, in fn.
            DO g = 1, bn
+              IF (intr == 0) THEN
+                is_in_E_set(1)=1
+              ENDIF
               IF (is_in_E_set(g) == 0) CYCLE
               startix = ix(g)
               endix = iy(g)
@@ -485,6 +500,7 @@ SUBROUTINE log_spmat_four (bn,bs,ix,iy,gam,nobs,nvars,x,xidx,xcptr,nnz,y,pf,pfl1
            ENDDO
            IF (intr /= 0) THEN
               d = sum(y/(1.0D0+exp(r)))
+              !!!!!!d = 4.0D0*d/nobs
               d = 4.0D0*d/nobs
               IF (d /= 0.0D0) THEN
                  b(0) = b(0) + d

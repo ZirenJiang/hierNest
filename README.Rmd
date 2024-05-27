@@ -1,5 +1,5 @@
 ---
-title: "Untitled"
+title: "Guidance of hierNest version 1"
 output: github_document
 ---
 
@@ -35,28 +35,57 @@ tt2=Sys.time()
 print(tt2-tt1)
 
 
+```
+
+
+##  The following show two ways of cross-validation 
+Since our model have three tuning parameters $\lambda, \alpha_1, \alpha_2$ that need to be selected through cross-validation, the following implements two ways of cross-validation. 
+
+### Method 1: general cross-validation method 
+The first method randomly select $\alpha_1, \alpha_2$ corresponding to each $\lambda$ value. Then, through the cross-validation, we select the optimal combination of ($\lambda, \alpha_1, \alpha_2$) that produce smallest MSE (or other loss).
+
+
+```{r,results='hide'}
+
 ## Cross validation for choosing the lambda parameter
-cv.fit=cv.hierNest(data$X,data$Y,method="overlapping",hier_info=data$hier_info,family="binomial",
-                   partition = "subgroup",
-                   asparse1=fit1$asparse1,asparse2=fit1$asparse2,
-                   nlambda = 100,intercept = FALSE)  ## Should input the tuning parameters asparse1 & asparse2 in order to be consistent
+cv.fit1=cv.hierNest(data$X,data$Y,method="overlapping",# For now, we only wrap-up the overlapping group lasso method in this function
+                   hier_info=data$hier_info,family="binomial",
+                   partition = "subgroup", # partition = "subgroup" make sure the each n-fold is sampled within the subgroups to avoid extreme cases
+                   cvmethod = "general", # cvmethod = "general" indicate the first cross-validation method
+                   asparse1=fit1$asparse1,asparse2=fit1$asparse2, ## Should input the tuning parameters asparse1 & asparse2 in order to be consistent with the model "fit1"
+                   nlambda = 100,intercept = FALSE)  
 
 
 ## Estimated coefficients for the selected lambda value
-fit1$beta[,order(abs(fit1$lambda-cv.fit$lambda.min))[1]]
 
+
+# fit1$beta[,order(abs(fit1$lambda-cv.fit1$lambda.min))[1]]
 
 ```
 
 
 
+### Method 2: grid search cross-validation method 
+The second method evenly select several grid points in the (predefined) region of ($\alpha_1, \alpha_2$), each grid point represent a combination of $\alpha_1$ and $\alpha_2$. Then, for each grid point, we run our method with a shorter lambda sequence. We select the optimal value of ($\lambda, \alpha_1, \alpha_2$) that produce smallest MSE (or other loss) through cross-validation.
+
+Note that, this type of cross-validation will generate different lambda sequence compared with the previous fit1 model. Therefore, we need to re-run our method with the selected value of ($\lambda, \alpha_1, \alpha_2$)
+```{r,results='hide'}
+cv.fit2=cv.hierNest(data$X,data$Y,method="overlapping",# For now, we only wrap-up the overlapping group lasso method in this function
+                   hier_info=data$hier_info,family="binomial",
+                   partition = "subgroup", # partition = "subgroup" make sure the each n-fold is sampled within the subgroups to avoid extreme cases
+                   cvmethod = "grid_search", # cvmethod = "grid_search" indicate the second cross-validation method
+                   asparse1 = c(0.5,20),asparse2 = c(0.05,0.20), # For the second method, need to input the upper and lower bounds of alpha_1 and alpha_2
+                   asparse1_num = 5,asparse2_num = 5, # number of grids for alpha_1 and alpha_2, total 25 grids will be selected
+                   nlambda = 100,intercept = FALSE)
 
 
+fit.selected=hierNest::hierNest(data$X,data$Y,method="overlapping", hier_info=data$hier_info,family="binomial",
+                   asparse1 = cv.fit2$sparsegl.fit$asparse1, # Need to input selected alpha_1
+                   asparse2 = cv.fit2$sparsegl.fit$asparse2, # Need to input selected alpha_2
+                   lambda = cv.fit2$lambda.min, # Selected lambda value
+                   intercept = FALSE)
 
 
-
-
-
-
+```
 
 

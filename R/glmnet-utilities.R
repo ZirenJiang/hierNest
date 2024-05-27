@@ -57,7 +57,7 @@ getmin <- function(lambda, cvm, cvsd) {
   semin <- (cvm + cvsd)[idmin]
   idmin <- cvm <= semin
   lambda.1se <- max(lambda[idmin])
-  list(lambda.min = lambda.min, lambda.1se = lambda.1se)
+  list(lambda.min = lambda.min, lambda.1se = lambda.1se,cvmin=cvmin)
 }
 
 
