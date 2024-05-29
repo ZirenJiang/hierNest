@@ -35,6 +35,12 @@ tt2=Sys.time()
 print(tt2-tt1)
 
 
+sample_inx=sort(sample(1:NROW(data$X),NROW(data$X),TRUE))
+
+## For now, please use our unique function of predict_hierNest to predict the outcome.
+pred1=hierNest::predict_hierNest(fit1,newx = data$X[sample_inx,],hier_info=data$hier_info[sample_inx,],type = "response")
+
+pred1[,50]
 ```
 
 
@@ -87,5 +93,60 @@ fit.selected=hierNest::hierNest(data$X,data$Y,method="overlapping", hier_info=da
 
 
 ```
+
+
+
+
+
+
+## Include intercept will
+
+```{r}
+tt1=Sys.time()
+fit1.true=hierNest::hierNest(data$X,
+                        data$Y,
+                        method="overlapping",  ## Overlapping group lasso method
+                        hier_info=data$hier_info,  ## Should input the hierarchical information for the groups
+                        random_asparse = TRUE,  ## Randomly draw the other two tuning parameter?
+                        nlambda=100,
+                        intercept = TRUE,  ## Set intercept = FALSE can potentially save a huge amount of time
+                        family="binomial")
+tt2=Sys.time()
+print(tt2-tt1)
+fit1.true$npasses
+
+
+fit1.true$beta[1,]
+fit1.true$b0
+
+
+
+tt1=Sys.time()
+fit1.false=hierNest::hierNest(data$X,
+                        data$Y,
+                        method="overlapping",  ## Overlapping group lasso method
+                        hier_info=data$hier_info,  ## Should input the hierarchical information for the groups
+                        random_asparse = TRUE,  ## Randomly draw the other two tuning parameter?
+                        nlambda=100,
+                        intercept = FALSE,  ## Set intercept = FALSE can potentially save a huge amount of time
+                        family="binomial")
+tt2=Sys.time()
+print(tt2-tt1)
+fit1.false$npasses
+
+fit1.false$beta[1,]
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
 

@@ -129,6 +129,61 @@ predict.sparsegl <- function(
   fit
 }
 
+#' @export
+predict_hierNest = function(object, 
+                            newx,
+                            hier_info,
+                            type = c("link", "response", "coefficients", "nonzero", "class"),
+                            ...){
+  x=newx
+  iden_matrix=matrix(nrow = NROW(x),ncol = (1+max(hier_info[,1])+max(hier_info[,2])))
+  
+  iden_matrix[,1]=1
+  
+  curr_ix=2
+  
+  
+  drgix_single=1:max(hier_info[,1])
+  drgiy_single=1:max(hier_info[,1])
+  
+  
+  
+  for(i in 1:max(hier_info[,1])){
+    iden_matrix[,curr_ix]=ifelse(hier_info[,1]==i,1,0)
+    drgix_single[i]=ifelse(i==1,2,curr_ix)
+    curr_ix=curr_ix+1
+    
+    hier_curr=hier_info[hier_info[,1]==i,2]
+    
+    for(j in (min(hier_curr)):(max(hier_curr))){
+      iden_matrix[,curr_ix]=ifelse(hier_info[,2]==j,1,0)
+      curr_ix=curr_ix+1
+    }
+    drgiy_single[i]=curr_ix-1
+  }
+  
+  p=NCOL(x)
+  
+  design=(t(khatri_rao(t(iden_matrix),t(cbind(matrix(rep(1,NROW(x)),ncol = 1),x)))))
+  
+  
+  trans_design.inx=1:NCOL(design)
+  
+  
+  for(i in 1:(p+1)){
+    for(j in 1:NCOL(iden_matrix)){
+      trans_design.inx[(i-1)*NCOL(iden_matrix)+j]=(j-1)*(p+1)+i
+    }
+  }
+  
+  x.design=design[,trans_design.inx]
+  
+  
+  fit=predict(object,newx = x.design,type=type,...)
+  return(fit)
+  
+}
+
 
 #' @export
 predict.lsspgl <- function(
