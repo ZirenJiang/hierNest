@@ -40,7 +40,7 @@ sample_inx=sort(sample(1:NROW(data$X),NROW(data$X),TRUE))
 ## For now, please use our unique function of predict_hierNest to predict the outcome.
 pred1=hierNest::predict_hierNest(fit1,newx = data$X[sample_inx,],hier_info=data$hier_info[sample_inx,],type = "response")
 
-pred1[,50]
+pred1[,80]
 ```
 
 
@@ -99,7 +99,11 @@ fit.selected=hierNest::hierNest(data$X,data$Y,method="overlapping", hier_info=da
 
 
 
-## Include intercept will
+## Exclude intercept can potentially save a huge amount of time
+
+In practice, we observe that including an intercept in the model (by setting `intercept = TRUE`) significantly increases the algorithm's runtime. To address this issue, we have revised our program to incorporate the intercept into the first column of the design matrix, applying no penalty to it. Now, users can set `intercept = FALSE` directly, and our program will automatically generate a column of all 1s, with the coefficient (beta[1,]) representing the overall intercept.
+
+Generally speaking, set `intercept = TRUE` and `intercept = FALSE` is equivalent in the algorithm. However, there may be some differences in the computing. See the following code for comparison:
 
 ```{r}
 tt1=Sys.time()
@@ -116,8 +120,8 @@ print(tt2-tt1)
 fit1.true$npasses
 
 
-fit1.true$beta[1,]
-fit1.true$b0
+fit1.true$beta[1,]  # When intercept = TRUE, beta[1,] will be 0 as it act the same as intercept
+fit1.true$b0 # b0 is the estimate of intercept
 
 
 
@@ -134,7 +138,7 @@ tt2=Sys.time()
 print(tt2-tt1)
 fit1.false$npasses
 
-fit1.false$beta[1,]
+fit1.false$beta[1,] # When intercept = FALSE, beta[1,] will be the estimate of intercept
 ```
 
 
