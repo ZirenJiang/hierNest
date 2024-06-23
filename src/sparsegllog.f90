@@ -270,7 +270,7 @@ SUBROUTINE log_sparse_four (bn,bs,ix,iy,gam,nobs,nvars,x,y,pf,pfl1,dfmax,pmax,&
      !---------- final update variable and save results------------
      ! PRINT *, "Here is where the final update starts"
      IF (l == 0) THEN
-        IF (MAXVAL(is_in_E_set) == 0) THEN
+        IF (SUM(is_in_E_set) < 2) THEN
            CYCLE ! don't save anything, we're still decrementing lambda
         ELSE
            l = 2
@@ -591,7 +591,7 @@ SUBROUTINE log_spmat_four (bn,bs,ix,iy,gam,nobs,nvars,x,xidx,xcptr,nnz,y,pf,pfl1
      ENDDO ! Ends outer loop
      !---------- final update variable and save results------------
      IF (l == 0) THEN
-        IF (MAXVAL(is_in_E_set) == 0) THEN
+        IF (SUM(is_in_E_set) < 2) THEN
            CYCLE ! don't save anything, we're still decrementing lambda
         ELSE
            l = 2

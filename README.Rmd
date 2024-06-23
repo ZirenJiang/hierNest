@@ -81,8 +81,9 @@ cv.fit2=cv.hierNest(data$X,data$Y,method="overlapping",# For now, we only wrap-u
                    partition = "subgroup", # partition = "subgroup" make sure the each n-fold is sampled within the subgroups to avoid extreme cases
                    cvmethod = "grid_search", # cvmethod = "grid_search" indicate the second cross-validation method
                    asparse1 = c(0.5,20),asparse2 = c(0.05,0.20), # For the second method, need to input the upper and lower bounds of alpha_1 and alpha_2
-                   asparse1_num = 5,asparse2_num = 5, # number of grids for alpha_1 and alpha_2, total 25 grids will be selected
-                   nlambda = 100,intercept = FALSE)
+                   asparse1_num = 4,asparse2_num = 4, # number of grids for alpha_1 and alpha_2, total 25 grids will be selected
+                   nlambda = 50, # length of lambda sequence for each pair of alpha_1 and alpha_2
+                   intercept = FALSE)
 
 
 fit.selected=hierNest::hierNest(data$X,data$Y,method="overlapping", hier_info=data$hier_info,family="binomial",
@@ -91,12 +92,34 @@ fit.selected=hierNest::hierNest(data$X,data$Y,method="overlapping", hier_info=da
                    lambda = cv.fit2$lambda.min, # Selected lambda value
                    intercept = FALSE)
 
-
+cv.fit2$lambda
 ```
 
 
 
+### Method 3: user supply pairs of asparse1 and asparse2
+hierNest also support the user-supplied pairs of $(\alpha_1, \alpha_2)$, see the following code:
+```{r}
+cv.fit3=hierNest::cv.hierNest(data$X,data$Y,method="overlapping",# For now, we only wrap-up the overlapping group lasso method in this function
+                   hier_info=data$hier_info,family="binomial",
+                   partition = "subgroup", # partition = "subgroup" make sure the each n-fold is sampled within the subgroups to avoid extreme cases
+                   cvmethod = "user_supply", # cvmethod = "grid_search" indicate the second cross-validation method
+                   asparse1 = c(1:15),asparse2 = c((1:15)/20), # For the second method, need to input the upper and lower bounds of alpha_1 and alpha_2
+                   nlambda = 50,intercept = FALSE)
 
+## selected index of the cross-validation
+cv.fit3$lambda[cv.fit3$cv.inx]
+cv.fit3$lambda.min
+
+## Final cv.fit, the selected pair of (lambda, alpha_1, alpha_2) can be extracted using cv.inx
+cv.fit3$sparsegl.fit
+
+## Selected alpha1
+cv.fit3$sparsegl.fit$asparse1[cv.fit3$cv.inx]
+
+## Selected alpha2
+cv.fit3$sparsegl.fit$asparse2[cv.fit3$cv.inx]
+```
 
 
 ## Exclude intercept can potentially save a huge amount of time

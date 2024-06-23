@@ -160,7 +160,9 @@ cv.sparsegl <- function(
               sparsegl.fit = sparsegl.object,
               call = match.call())
   lamin <- getmin(lambda, cvm, cvsd)
+  cv.inx=order(cvm)[1]
   obj <- c(out, as.list(lamin))
+  obj[["cv.inx"]]=cv.inx
   class(obj) <- "cv.sparsegl"
   obj
 }

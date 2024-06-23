@@ -131,7 +131,7 @@
 #' fit_pois <- sparsegl(X, yp, group = groups, family = poisson())
 #' 
 #' 
-cv.hierNest.test = function(x, y, 
+cv.hierNest = function(x, y, 
                     group = NULL,
                     family = c("gaussian", "binomial"),
                     nlambda=100,
@@ -326,38 +326,88 @@ cv.hierNest.test = function(x, y,
         }
         
         
-        nlambda_single=round(nlambda/(asparse1_num*asparse2_num))
+        #nlambda_single=round(nlambda/(asparse1_num*asparse2_num))
         
         
         res_min=c()
         res_return=list()
+        lambda_seq=c()
+        alpha1_seq=c()
+        alpha2_seq=c()
         for(n1 in 1:asparse1_num){
           for(n2 in 1:asparse2_num){
-            res_trans=hierNest::cv.sparsegl(x.design.spars,y,
-                                            group =group_use,family=family,
-                                            cn=cn,
-                                            drgix=drgix,
-                                            drgiy=drgiy,
-                                            cn_s=cn_s,
-                                            cn_e=cn_e,
-                                            intercept = intercept,
-                                            pred.loss =pred.loss,
-                                            subgroupnumber=subgroupnumber,partition = partition,
-                                            asparse1=asparse1_base[n1],asparse2=asparse2_base[n2],
-                                            nlambda=nlambda_single,lambda.factor=lambda.factor,lambda=lambda,
-                                            pf_group=pf_group,pf_sparse=pf_sparse,
-                                            standardize=standardize,
-                                            lower_bnd=lower_bnd,upper_bnd=upper_bnd,
-                                            eps=eps,maxit=maxit)
-            res_min=c(res_min,res_trans$cvmin)
-            res_return=c(res_return,list(res_trans))
+            
+            temp.fitt=hierNest::hierNest(x,y,method="overlapping",
+                                         hier_info=hier_info,
+                                         nlambda = nlambda,
+                                         intercept = FALSE,
+                                         family = family,
+                                         random_asparse = FALSE,
+                                         asparse1 = rep(asparse1_base[n1],nlambda),
+                                         asparse2 = rep(asparse2_base[n2],nlambda))
+            lambda_seq=c(lambda_seq,temp.fitt$lambda)
+            alpha1_seq=c(alpha1_seq,rep(asparse1_base[n1],nlambda))
+            alpha2_seq=c(alpha2_seq,rep(asparse2_base[n2],nlambda))
+            
+            
           }
         }
         
+        lambda_seq_ordered=lambda_seq[order(lambda_seq)]
+        alpha1_seq_ordered=alpha1_seq[order(lambda_seq)]
+        alpha2_seq_ordered=alpha2_seq[order(lambda_seq)]
         
-        min_inx=order(res_min)[1]
         
-        res=res_return[[min_inx]]
+        res=hierNest::cv.sparsegl(x.design.spars,y,
+                                  group =group_use,family=family,
+                                  cn=cn,
+                                  drgix=drgix,
+                                  drgiy=drgiy,
+                                  cn_s=cn_s,
+                                  cn_e=cn_e,
+                                  intercept = intercept,
+                                  pred.loss =pred.loss,
+                                  subgroupnumber=subgroupnumber,partition = partition,
+                                  asparse1=alpha1_seq_ordered,
+                                  asparse2=alpha2_seq_ordered,
+                                  nlambda=length(lambda_seq_ordered),
+                                  lambda.factor=lambda.factor,
+                                  lambda=lambda_seq_ordered,
+                                  pf_group=pf_group,pf_sparse=pf_sparse,
+                                  standardize=standardize,
+                                  lower_bnd=lower_bnd,upper_bnd=upper_bnd,
+                                  eps=eps,maxit=maxit)
+        
+        
+        
+        
+        # for(n1 in 1:asparse1_num){
+        #   for(n2 in 1:asparse2_num){
+        #     res_trans=hierNest::cv.sparsegl(x.design.spars,y,
+        #                                     group =group_use,family=family,
+        #                                     cn=cn,
+        #                                     drgix=drgix,
+        #                                     drgiy=drgiy,
+        #                                     cn_s=cn_s,
+        #                                     cn_e=cn_e,
+        #                                     intercept = intercept,
+        #                                     pred.loss =pred.loss,
+        #                                     subgroupnumber=subgroupnumber,partition = partition,
+        #                                     asparse1=asparse1_base[n1],asparse2=asparse2_base[n2],
+        #                                     nlambda=nlambda_single,lambda.factor=lambda.factor,lambda=lambda,
+        #                                     pf_group=pf_group,pf_sparse=pf_sparse,
+        #                                     standardize=standardize,
+        #                                     lower_bnd=lower_bnd,upper_bnd=upper_bnd,
+        #                                     eps=eps,maxit=maxit)
+        #     res_min=c(res_min,res_trans$cvmin)
+        #     res_return=c(res_return,list(res_trans))
+        #   }
+        # }
+        # 
+        # 
+        # min_inx=order(res_min)[1]
+        # 
+        # res=res_return[[min_inx]]
         
         
         
@@ -365,7 +415,71 @@ cv.hierNest.test = function(x, y,
         
       }
       
-      
+      if(cvmethod=="user_supply"){
+        
+        asparse_num=length(asparse1)
+        if(length(asparse1)!=length(asparse2)){
+          cli::cli_abort("For user supply sparse parameters, asparse1 must have the same length as asparse2.")
+        }
+        
+        
+        
+        res_min=c()
+        res_return=list()
+        lambda_seq=c()
+        alpha1_seq=c()
+        alpha2_seq=c()
+        for(n1 in 1:asparse_num){
+          
+            
+          temp.fitt=hierNest::hierNest(x,y,method="overlapping",
+                                       hier_info=hier_info,
+                                       nlambda = nlambda,
+                                       intercept = FALSE,
+                                       family = family,
+                                       random_asparse = FALSE,
+                                       asparse1 = rep(asparse1[n1],nlambda),
+                                       asparse2 = rep(asparse2[n1],nlambda))
+          lambda_seq=c(lambda_seq,temp.fitt$lambda)
+          alpha1_seq=c(alpha1_seq,rep(asparse1[n1],nlambda))
+          alpha2_seq=c(alpha2_seq,rep(asparse2[n1],nlambda))
+            
+            
+          
+        }
+        
+        lambda_seq_ordered=lambda_seq[order(lambda_seq)]
+        alpha1_seq_ordered=alpha1_seq[order(lambda_seq)]
+        alpha2_seq_ordered=alpha2_seq[order(lambda_seq)]
+        
+        
+        res=hierNest::cv.sparsegl(x.design.spars,y,
+                                  group =group_use,family=family,
+                                  cn=cn,
+                                  drgix=drgix,
+                                  drgiy=drgiy,
+                                  cn_s=cn_s,
+                                  cn_e=cn_e,
+                                  intercept = intercept,
+                                  pred.loss =pred.loss,
+                                  subgroupnumber=subgroupnumber,partition = partition,
+                                  asparse1=alpha1_seq_ordered,
+                                  asparse2=alpha2_seq_ordered,
+                                  nlambda=length(lambda_seq_ordered),
+                                  lambda.factor=lambda.factor,
+                                  lambda=lambda_seq_ordered,
+                                  pf_group=pf_group,pf_sparse=pf_sparse,
+                                  standardize=standardize,
+                                  lower_bnd=lower_bnd,upper_bnd=upper_bnd,
+                                  eps=eps,maxit=maxit)
+        
+        
+        
+        
+        
+        
+        
+      }
       
       return(res)
       
