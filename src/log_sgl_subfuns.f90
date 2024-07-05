@@ -142,7 +142,7 @@ CONTAINS
       s_endinx = endix-startix+1
       
       !CALL softthresh(s, lama * t_for_sg * pfl1, bsg)
-      CALL softthresh(s(2:s_endinx), lama3*t_for_sg*pfl1, bsg-1) 
+      CALL softthresh(s(2:s_endinx), lama1*t_for_sg*pfl1, bsg-1) 
       
       
       
@@ -164,7 +164,7 @@ CONTAINS
       
       
       snorm = SQRT(DOT_PRODUCT(s,s))
-      tea = snorm - t_for_sg * lama1 * pfg
+      tea = snorm - t_for_sg * lama3 * pfg
       IF (tea > 0.0D0) THEN
          b(startix:endix) = s * tea / snorm
          DO k = startix, endix

@@ -91,7 +91,7 @@ sgl_ls_my <- function(
       NAOK = TRUE,
       PACKAGE = "hierNest")
   }
-
+  print(as.double(asparse1))
   # output
   outlist <- getoutput(x, group, fit, maxit, pmax, nvars, vnames, eps)
   if (standardize) outlist$beta <- outlist$beta * xs

@@ -138,8 +138,8 @@ SUBROUTINE log_sparse_four (bn,bs,ix,iy,gam,nobs,nvars,x,y,pf,pfl1,dfmax,pmax,&
         ENDIF
      ENDIF
      lama1 = al 
-     lama2 = al * alsparse1(l)
-     lama3 = al * alsparse2(l)
+     lama2 = al * alsparse1(l+1)
+     lama3 = al * alsparse2(l+1)
      ! This is the start of the algorithm, for a given lambda...
      CALL strong_rule (is_in_S_set, ga, pf, tlam)
      ! uses s_set instead of e_set...
@@ -452,8 +452,8 @@ SUBROUTINE log_spmat_four (bn,bs,ix,iy,gam,nobs,nvars,x,xidx,xcptr,nnz,y,pf,pfl1
         ENDIF
      ENDIF
      lama1 = al 
-     lama2 = al * alsparse1(l)
-     lama3 = al * alsparse2(l)
+     lama2 = al * alsparse1(l+1)
+     lama3 = al * alsparse2(l+1)
      ! This is the start of the algorithm, for a given lambda...
      CALL strong_rule (is_in_S_set, ga, pf, tlam)
      ! uses s_set instead of e_set...

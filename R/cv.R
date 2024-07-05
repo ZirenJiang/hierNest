@@ -163,6 +163,8 @@ cv.sparsegl <- function(
   cv.inx=order(cvm)[1]
   obj <- c(out, as.list(lamin))
   obj[["cv.inx"]]=cv.inx
+  obj[["foldid"]]=foldid
+  obj[["minvalue"]]=min(cvm)
   class(obj) <- "cv.sparsegl"
   obj
 }

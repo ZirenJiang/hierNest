@@ -11,6 +11,78 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 
+```{r}
+library(hierNest)
+library(rTensor)
+sp=sample(1:NROW(data$X))
+fit1=hierNest::hierNest(data$X[sp,],
+                        data$Y[sp],
+                        method="overlapping",  ## Overlapping group lasso method
+                        hier_info=data$hier_info,  ## Should input the hierarchical information for the groups
+                        random_asparse = FALSE,  ## Randomly draw the other two tuning parameter?
+                        nlambda=100,
+                   #     lambda=4.574160e-08,
+                        asparse1 = rep(1000000,100),
+                        asparse2 = rep(1000000,100),
+                        intercept = FALSE,  ## Set intercept = FALSE can potentially save a huge amount of time
+                        family="gaussian")
+#fit1$beta
+apply(fit1$beta,2,function(x){
+  sum(x!=0)
+})
+fit1$df
+fit1$beta[,2]
+# 
+# fit1$beta[,1]
+# 
+# fit1$beta[,2]
+# 
+# fit1$beta[,3]
+
+fit1$lambda
+
+
+
+
+fit3=hierNest::hierNest(data$X[sp,],
+                        data$Y[sp],
+                        method="overlapping",  ## Overlapping group lasso method
+                        hier_info=data$hier_info,  ## Should input the hierarchical information for the groups
+                        random_asparse = FALSE,  ## Randomly draw the other two tuning parameter?
+                       lambda = fit1$lambda,
+                   #     lambda=4.574160e-08,
+                        asparse1 = rep(100,100),
+                        asparse2 = rep(100,100),
+                        intercept = FALSE,  ## Set intercept = FALSE can potentially save a huge amount of time
+                        family="binomial")
+fit3$df
+
+fit3$lambda
+
+
+
+
+
+
+fit2=hierNest::hierNest(data$X[sp,],
+                        data$Y[sp],
+                        method="overlapping",  ## Overlapping group lasso method
+                        hier_info=data$hier_info,  ## Should input the hierarchical information for the groups
+                        random_asparse = FALSE,  ## Randomly draw the other two tuning parameter?
+                        nlambda=100,
+                        asparse1 = rep(1,100),
+                        asparse2 = rep(1,100),
+                        intercept = FALSE,  ## Set intercept = FALSE can potentially save a huge amount of time
+                        family="binomial")
+
+fit2$lambda
+
+apply(fit2$beta,2,function(x){
+  sum(x!=0)
+})
+fit2$df
+fit2$beta[64,]
+```
 
 
 
