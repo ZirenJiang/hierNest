@@ -36,13 +36,6 @@ grouped_two_norm <- function(x, gr) as.vector(tapply(x, gr, two_norm))
 #'   group norm.
 #'
 #' @return A numeric scalar or vector
-#' @export
-#'
-#' @examples
-#' x <- c(rep(-1, 5), rep(0, 5), rep(1,5))
-#' gr <- c(rep(1,5), rep(2,5), rep(3,5))
-#' asparse <- 0.05
-#' grouped_sp_norm(x, gr, asparse)
 #'
 #' @describeIn grouped_sp_norm A vector of length `unique(gr)` consisting of
 #'   the `asparse` convex combination of the l1 and l2-norm for each group.

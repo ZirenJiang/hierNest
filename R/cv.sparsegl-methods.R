@@ -18,18 +18,7 @@
 #' @return The coefficients at the requested value(s) for `lambda`.
 #' @seealso [cv.sparsegl()] and [predict.cv.sparsegl()].
 #' @method coef cv.sparsegl
-#' @export
-#' @examples
-#' n <- 100
-#' p <- 20
-#' X <- matrix(rnorm(n * p), nrow = n)
-#' eps <- rnorm(n)
-#' beta_star <- c(rep(5, 5), c(5, -5, 2, 0, 0), rep(-5, 5), rep(0, (p - 15)))
-#' y <- X %*% beta_star + eps
-#' groups <- rep(1:(p / 5), each = 5)
-#' fit1 <- sparsegl(X, y, group = groups)
-#' cv_fit <- cv.sparsegl(X, y, groups)
-#' coef(cv_fit, s = c(0.02, 0.03))
+
 coef.cv.sparsegl <- function(object, s = c("lambda.1se", "lambda.min"), ...) {
   rlang::check_dots_empty()
   if (!(is.numeric(s) || is.character(s)))
@@ -64,18 +53,7 @@ coef.cv.sparsegl <- function(object, s = c("lambda.1se", "lambda.min"), ...) {
 #'
 #' @method predict cv.sparsegl
 #' @export
-#' @examples
-#' n <- 100
-#' p <- 20
-#' X <- matrix(rnorm(n * p), nrow = n)
-#' eps <- rnorm(n)
-#' beta_star <- c(rep(5, 5), c(5, -5, 2, 0, 0), rep(-5, 5), rep(0, (p - 15)))
-#' y <- X %*% beta_star + eps
-#' groups <- rep(1:(p / 5), each = 5)
-#' fit1 <- sparsegl(X, y, group = groups)
-#' cv_fit <- cv.sparsegl(X, y, groups)
-#' predict(cv_fit, newx = X[50:60, ], s = "lambda.min")
-#'
+
 predict.cv.sparsegl <- function(
     object, newx,
     s = c("lambda.1se", "lambda.min"),

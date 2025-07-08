@@ -5,7 +5,7 @@ sgl_ls_my <- function(
   cn,drgix,drgiy,cn_s,cn_e) {
   # call Fortran core
   is.sparse <- FALSE
-  print("sgl_ls_my")
+  #print("sgl_ls_my")
   if (!is.numeric(y)) rlang::abort("For family = 'gaussian', y must be numeric.")
   if (inherits(x,"sparseMatrix")) {
     is.sparse <- TRUE
@@ -91,7 +91,7 @@ sgl_ls_my <- function(
       NAOK = TRUE,
       PACKAGE = "hierNest")
   }
-  print(as.double(asparse1))
+  #print(as.double(asparse1))
   # output
   outlist <- getoutput(x, group, fit, maxit, pmax, nvars, vnames, eps)
   if (standardize) outlist$beta <- outlist$beta * xs

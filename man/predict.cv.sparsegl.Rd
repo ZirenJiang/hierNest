@@ -47,19 +47,6 @@ A matrix or vector of predicted values.
 This function makes predictions from a cross-validated [cv.sparsegl()] object,
 using the stored `sparsegl.fit` object, and the value chosen for `lambda`.
 }
-\examples{
-n <- 100
-p <- 20
-X <- matrix(rnorm(n * p), nrow = n)
-eps <- rnorm(n)
-beta_star <- c(rep(5, 5), c(5, -5, 2, 0, 0), rep(-5, 5), rep(0, (p - 15)))
-y <- X \%*\% beta_star + eps
-groups <- rep(1:(p / 5), each = 5)
-fit1 <- sparsegl(X, y, group = groups)
-cv_fit <- cv.sparsegl(X, y, groups)
-predict(cv_fit, newx = X[50:60, ], s = "lambda.min")
-
-}
 \seealso{
 [cv.sparsegl()] and [coef.cv.sparsegl()].
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/cv_hierNest.R
 \name{cv.hierNest}
 \alias{cv.hierNest}
-\title{Regularization paths for sparse group-lasso models}
+\title{Cross-validated hierarchical nested regularization for subgroup models}
 \usage{
 cv.hierNest(
   x,
@@ -18,6 +18,8 @@ cv.hierNest(
   intercept = TRUE,
   asparse1 = c(0.5, 20),
   asparse2 = c(0.01, 0.2),
+  asparse1_num = 4,
+  asparse2_num = 4,
   standardize = TRUE,
   lower_bnd = -Inf,
   upper_bnd = Inf,
@@ -30,153 +32,108 @@ cv.hierNest(
 )
 }
 \arguments{
-\item{x}{Double. A matrix of predictors, of dimension
-\eqn{n \times p}{n * p}; each row
-is a vector of measurements and each column is a feature. Objects of class
-[`Matrix::sparseMatrix`] are supported.}
+\item{x}{Matrix of predictors, of dimension \eqn{n \times p}{n * p}; each row is an observation.
+Can be a dense or sparse matrix.}
 
-\item{y}{Double/Integer/Factor. The response variable.
-Quantitative for `family="gaussian"` and for other exponential families.
-If `family="binomial"` should be either a factor with two levels or
-a vector of integers taking 2 unique values. For a factor, the last level
-in alphabetical order is the target class.}
+\item{y}{Response variable. For `family="gaussian"`, should be numeric. For `family="binomial"`, should be a
+factor with two levels or a numeric vector with two unique values.}
 
-\item{group}{Integer. A vector of consecutive integers describing the
-grouping of the coefficients (see example below).}
+\item{group}{Optional vector or factor indicating group assignments for variables. Used for custom grouping.}
 
-\item{family}{Character or function. Specifies the generalized linear model
-  to use. Valid options are:
-  * `"gaussian"` - least squares loss (regression, the default),
-  * `"binomial"` - logistic loss (classification)
+\item{family}{Character string specifying the model family. Options are `"gaussian"` (default) for least-squares regression,
+or `"binomial"` for logistic regression.}
 
-  For any other type, a valid [stats::family()] object may be passed. Note
-  that these will generally be much slower to estimate than the built-in
-  options passed as strings. So for example, `family = "gaussian"` and
-  `family = gaussian()` will produce the same results, but the first
-  will be much faster.}
+\item{nlambda}{Number of lambda values to use for regularization path. Default is 100.}
 
-\item{nlambda}{The number of \code{lambda} values - default is 100.}
+\item{lambda.factor}{Factor determining the minimal value of lambda in the sequence,
+where `min(lambda) = lambda.factor * max(lambda)`. See Details.}
 
-\item{lambda.factor}{A multiplicative factor for the minimal lambda in the
-`lambda` sequence, where `min(lambda) = lambda.factor * max(lambda)`.
-`max(lambda)` is the smallest value of `lambda` for which all coefficients
-are zero. The default depends on the relationship between \eqn{n}
-(the number of rows in the matrix of predictors) and \eqn{p}
-(the number of predictors). If \eqn{n \geq p}, the
-default is `0.0001`.  If \eqn{n < p}, the default is `0.01`.
-A very small value of `lambda.factor` will lead to a
-saturated fit. This argument has no effect if there is user-defined
-`lambda` sequence.}
+\item{pred.loss}{Character string indicating loss to minimize during cross-validation. Options include `"default"`, `"mse"`,
+`"deviance"`, `"mae"`, `"misclass"`, and `"ROC"`.}
 
-\item{lambda}{A user supplied `lambda` sequence. The default, `NULL`
-results in an automatic computation based on `nlambda`, the smallest value
-of `lambda` that would give the null model (all coefficient estimates equal
-to zero), and `lambda.factor`. Supplying a value of `lambda` overrides
-this behaviour. It is likely better to supply a
-decreasing sequence of `lambda` values than a single (small) value. If
-supplied, the user-defined `lambda` sequence is automatically sorted in
-decreasing order.}
+\item{lambda}{Optional user-supplied sequence of lambda values (overrides `nlambda`/`lambda.factor`).}
 
-\item{pf_group}{Penalty factor on the groups, a vector of the same
-length as the total number of groups. Separate penalty weights can be applied
-to each group of \eqn{\beta}{beta's}s to allow differential shrinkage.
-Can be 0 for some
-groups, which implies no shrinkage, and results in that group always being
-included in the model (depending on `pf_sparse`). Default value for each
-entry is the square-root of the corresponding size of each group.}
+\item{pf_group}{Optional penalty factors on the groups, as a numeric vector. Default adjusts for group size.}
 
-\item{pf_sparse}{Penalty factor on l1-norm, a vector the same length as the
-total number of columns in `x`. Each value corresponds to one predictor
-Can be 0 for some predictors, which
-implies that predictor will be receive only the group penalty.}
+\item{pf_sparse}{Optional penalty factors on the l1-norm (for sparsity), as a numeric vector.}
 
-\item{intercept}{Whether to include intercept in the model. Default is TRUE.}
+\item{intercept}{Logical; whether to include an intercept in the model. Default is TRUE.}
 
-\item{standardize}{Logical flag for variable standardization (scaling) prior
-to fitting the model. Default is TRUE.}
+\item{asparse1}{Relative weight(s) for the first (e.g., group) layer of the overlapping group lasso penalty. Default is c(0.5, 20).}
 
-\item{lower_bnd}{Lower bound for coefficient values, a vector in length of 1
-or of length the number of groups. Must be non-positive numbers only.
-Default value for each entry is `-Inf`.}
+\item{asparse2}{Relative weight(s) for the second (e.g., subgroup) layer. Default is c(0.01, 0.2).}
 
-\item{upper_bnd}{Upper for coefficient values, a vector in length of 1
-or of length the number of groups. Must be non-negative numbers only.
-Default value for each entry is `Inf`.}
+\item{asparse1_num}{Number of values in asparse1 grid (for grid search). Default is 4.}
 
-\item{eps}{Convergence termination tolerance. Defaults value is `1e-8`.}
+\item{asparse2_num}{Number of values in asparse2 grid (for grid search). Default is 4.}
 
-\item{maxit}{Maximum number of outer-loop iterations allowed at fixed lambda
-value. Default is `3e8`. If models do not converge, consider increasing
-`maxit`.}
+\item{standardize}{Logical; whether to standardize predictors prior to model fitting. Default is TRUE.}
 
-\item{dfmax}{Limit the maximum number of groups in the model. Default is
-no limit.}
+\item{lower_bnd}{Lower bound(s) for coefficient values. Default is \code{-Inf}.}
 
-\item{pmax}{Limit the maximum number of groups ever to be nonzero. For
-example once a group enters the model, no matter how many times it exits or
-re-enters model through the path, it will be counted only once.}
+\item{upper_bnd}{Upper bound(s) for coefficient values. Default is \code{Inf}.}
 
-\item{asparse}{The relative weight to put on the \eqn{\ell_1}-norm in
-sparse group lasso. Default is `0.05` (resulting in `0.95` on the
-\eqn{\ell_2}-norm).}
+\item{eps}{Convergence tolerance for optimization. Default is 1e-8.}
 
-\item{weights}{Double vector. Optional observation weights. These can
-only be used with a [stats::family()] object.}
+\item{maxit}{Maximum number of optimization iterations. Default is 3e6.}
 
-\item{offset}{Double vector. Optional offset (constant predictor without a
-corresponding coefficient). These can only be used with a
-[stats::family()] object.}
+\item{hier_info}{Required for `method = "overlapping"`; a matrix describing the hierarchical structure of the subgroups
+(see Details).}
 
-\item{warm}{List created with [make_irls_warmup()]. These can only be used
-with a [stats::family()] object, and is not typically necessary even then.}
+\item{method}{Character; either `"overlapping"` for overlapping group lasso, `"sparsegl"` for sparse group lasso,
+or `"general"` for other hierarchical regularization. Default is `"overlapping"`.}
 
-\item{trace_it}{Scalar integer. Larger values print more output during
-the irls loop. Typical values are `0` (no printing), `1` (some printing
-and a progress bar), and `2` (more detailed printing).
-These can only be used with a [stats::family()] object.}
+\item{partition}{Character string; determines subgroup partitioning. Default is `"subgroup"`.}
+
+\item{cvmethod}{Cross-validation method. Options include `"general"` (default), `"grid_search"`, or `"user_supply"` (for user-supplied grid).}
 }
 \value{
-An object with S3 class `"sparsegl"`. Among the list components:
-* `call` The call that produced this object.
-* `b0` Intercept sequence of length `length(lambda)`.
-* `beta` A `p` x `length(lambda)` sparse matrix of coefficients.
-* `df` The number of features with nonzero coefficients for each value of
-    `lambda`.
-* `dim` Dimension of coefficient matrix.
-* `lambda` The actual sequence of `lambda` values used.
-* `npasses` Total number of iterations summed over all `lambda` values.
-* `jerr` Error flag, for warnings and errors, 0 if no error.
-* `group` A vector of consecutive integers describing the grouping of the
-    coefficients.
-* `nobs` The number of observations used to estimate the model.
-
-If `sparsegl()` was called with a [stats::family()] method, this may also
-contain information about the deviance and the family used in fitting.
+An object containing the fitted hierarchical model and cross-validation results, including:
+  \item{fit}{Fitted model object.}
+  \item{lambda}{Sequence of lambda values considered.}
+  \item{cv_error}{Cross-validation error/loss for each combination of tuning parameters.}
+  \item{best_params}{Best tuning parameters selected.}
+  \item{...}{Additional diagnostic and output fields.}
 }
 \description{
-Fits regularization paths for sparse group-lasso penalized learning problems at a
-sequence of regularization parameters `lambda`.
-Note that the objective function for least squares is
-\deqn{RSS/(2n) + \lambda penalty}
-Users can also tweak the penalty by choosing a different penalty factor.
+Fits regularization paths for hierarchical subgroup-specific penalized learning problems,
+leveraging nested group structure (such as Major Diagnostic Categories [MDC] and Diagnosis-Related Groups [DRG])
+with options for lasso or overlapping group lasso penalties. Performs cross-validation
+to select tuning parameters for penalization and subgroup structure.
+
+This function enables information sharing across related subgroups by reparameterizing 
+covariate effects into overall, group-specific, and subgroup-specific components and
+supports structured shrinkage through hierarchical regularization. Users may select
+between the lasso (hierNest-Lasso) and overlapping group lasso (hierNest-OGLasso)
+frameworks, as described in Jiang et al. (2024, submitted, see details below).
+}
+\details{
+The hierarchical nested framework decomposes covariate effects into overall, group, and subgroup-specific components,
+with regularization encouraging fusion or sparsity across these hierarchical levels. The function can fit both
+the lasso penalty (allowing arbitrary zero/non-zero patterns) and the overlapping group lasso penalty (enforcing
+hierarchical selection structure), as described in Jiang et al. (2024, submitted).
+
+The argument `hier_info` must be supplied for `"overlapping"` method, and encodes the hierarchical
+relationship between groups and subgroups (e.g., MDCs and DRGs).
+
+Cross-validation is used to select tuning parameters, optionally over a grid for hierarchical penalty weights
+(asparse1, asparse2), and the regularization parameter lambda.
 }
 \examples{
-n <- 100
-p <- 20
-X <- matrix(rnorm(n * p), nrow = n)
-eps <- rnorm(n)
-beta_star <- c(rep(5, 5), c(5, -5, 2, 0, 0), rep(-5, 5), rep(0, (p - 15)))
-y <- X \%*\% beta_star + eps
-groups <- rep(1:(p / 5), each = 5)
-fit <- sparsegl(X, y, group = groups)
-
-yp <- rpois(n, abs(X \%*\% beta_star))
-fit_pois <- sparsegl(X, yp, group = groups, family = poisson())
-
-
+# Simulated data:
+set.seed(123)
+n <- 60; p <- 4
+x <- matrix(rnorm(n * p), n, p)
+y <- rbinom(n, 1, plogis(x[,1] - 0.5*x[,2]))
+# Create toy hier_info: 2 groups, 3 subgroups in each
+hier_info <- cbind(rep(1:2, each=n/2), rep(1:4, each = n/4))
+library(rTensor)
+cv.fit=hierNest::cv.hierNest(x,y,method="overlapping", hier_info=hier_info,  cvmethod = "general",intercept = FALSE,family="binomial")
+}
+\references{
+Jiang, Z., Huo, L., Hou, J., & Huling, J. D.
+"Heterogeneous readmission prediction with hierarchical effect decomposition and regularization".
 }
 \seealso{
-[cv.sparsegl()] and the [`plot()`][plot.sparsegl()],
-  [`predict()`][predict.sparsegl()], and [`coef()`][coef.sparsegl()]
-  methods for `"sparsegl"` objects.
+[glmnet::glmnet()], [hierNest::cv.sparsegl()]
 }

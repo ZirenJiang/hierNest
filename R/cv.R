@@ -1,67 +1,4 @@
-#' Cross-validation for a `sparsegl` object.
-#'
-#' Performs k-fold cross-validation for [sparsegl()].
-#' This function is largely similar [glmnet::cv.glmnet()].
-#'
-#' The function runs [sparsegl()] `nfolds + 1` times; the first to
-#' get the `lambda` sequence, and then the remainder to compute the fit
-#' with each of the folds omitted. The average error and standard error
-#' over the folds are computed.
-#'
-#' @aliases cv.sparsegl
-#' @inheritParams sparsegl
-#' @param pred.loss Loss to use for cross-validation error. Valid options are:
-#'  * `"default"` the same as deviance (mse for regression and deviance otherwise)
-#'  * `"mse"` mean square error
-#'  * `"deviance"` the default (mse for Gaussian regression, and negative
-#'    log-likelihood otherwise)
-#'  * `"mae"` mean absolute error, can apply to any family
-#'  * `"misclass"` for classification only, misclassification error.
-#' @param nfolds Number of folds - default is 10. Although `nfolds` can be
-#'   as large as the sample size (leave-one-out CV), it is not recommended for
-#'   large datasets. Smallest value allowable is `nfolds = 3`.
-#' @param foldid An optional vector of values between 1 and `nfolds`
-#'   identifying which fold each observation is in. If supplied, `nfolds` can
-#'   be missing.
-#' @param ... Additional arguments to [sparsegl()].
-#'
-#' @return An object of class [cv.sparsegl()] is returned, which is a
-#'   list with the components describing the cross-validation error.
-#'   \item{lambda}{The values of \code{lambda} used in the fits.}
-#'   \item{cvm}{The mean cross-validated error - a vector of
-#'     length \code{length(lambda)}.}
-#'   \item{cvsd}{Estimate of standard error of \code{cvm}.}
-#'   \item{cvupper}{Upper curve = \code{cvm + cvsd}.}
-#'   \item{cvlower}{Lower curve = \code{cvm - cvsd}.}
-#'   \item{name}{A text string indicating type of measure (for plotting
-#'     purposes).}
-#'   \item{nnzero}{The number of non-zero coefficients for each \code{lambda}}
-#'   \item{active_grps}{The number of active groups for each \code{lambda}}
-#'   \item{sparsegl.fit}{A fitted [sparsegl()] object for the full data.}
-#'   \item{lambda.min}{The optimal value of \code{lambda} that gives
-#'     minimum cross validation error \code{cvm}.}
-#'   \item{lambda.1se}{The largest value of \code{lambda} such that error
-#'     is within 1 standard error of the minimum.}
-#'   \item{call}{The function call.}
-#'
-#'
-#' @seealso [sparsegl()], as well as [`plot()`][plot.cv.sparsegl()],
-#'   [`predict()`][predict.cv.sparsegl()], and [`coef()`][coef.cv.sparsegl()]
-#'   methods for `"cv.sparsegl"` objects.
-#'
-#' @export
-#'
-#'
-#' @examples
-#' n <- 100
-#' p <- 20
-#' X <- matrix(rnorm(n * p), nrow = n)
-#' eps <- rnorm(n)
-#' beta_star <- c(rep(5, 5), c(5, -5, 2, 0, 0), rep(-5, 5), rep(0, (p - 15)))
-#' y <- X %*% beta_star + eps
-#' groups <- rep(1:(p / 5), each = 5)
-#' cv_fit <- cv.sparsegl(X, y, groups)
-#'
+
 cv.sparsegl <- function(
     x, y, group = NULL, family = c("gaussian", "binomial"),
     lambda = NULL,
@@ -108,7 +45,7 @@ cv.sparsegl <- function(
     }
     if(partition=="subgroup"){
       if(family=="binomial"){
-        print("binomial leave out")
+        #print("binomial leave out")
         foldid=c()
         startinx=1
         endinx=subgroupnumber[1]
@@ -209,7 +146,7 @@ cverror.logitspgl <- function(
     fullfit, outlist, lambda, x, y, foldid,
     pred.loss = c("default", "mse", "deviance", "mae", "misclass","ROC"),
     ...) {
-  print("cverror_binomial")
+  #print("cverror_binomial")
   typenames <- c(default = "Binomial deviance", mse = "Mean squared error",
                  deviance = "Binomial deviance", mae = "Mean absolute error",
                  misclass = "Missclassification error")

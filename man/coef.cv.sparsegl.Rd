@@ -27,18 +27,6 @@ This function etracts coefficients from a
 cross-validated [sparsegl()] model, using the stored `"sparsegl.fit"`
 object, and the optimal value chosen for `lambda`.
 }
-\examples{
-n <- 100
-p <- 20
-X <- matrix(rnorm(n * p), nrow = n)
-eps <- rnorm(n)
-beta_star <- c(rep(5, 5), c(5, -5, 2, 0, 0), rep(-5, 5), rep(0, (p - 15)))
-y <- X \%*\% beta_star + eps
-groups <- rep(1:(p / 5), each = 5)
-fit1 <- sparsegl(X, y, group = groups)
-cv_fit <- cv.sparsegl(X, y, groups)
-coef(cv_fit, s = c(0.02, 0.03))
-}
 \seealso{
 [cv.sparsegl()] and [predict.cv.sparsegl()].
 }

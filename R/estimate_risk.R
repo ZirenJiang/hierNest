@@ -19,17 +19,7 @@
 #' \url{https://arxiv.org/pdf/1212.6478.pdf}.
 #' @return a `data.frame` with as many rows as `object$lambda`. It contains
 #'   columns `lambda`, `df`, and the requested risk types.
-#' @export
-#' @examples
-#' n <- 100
-#' p <- 20
-#' X <- matrix(rnorm(n * p), nrow = n)
-#' eps <- rnorm(n)
-#' beta_star <- c(rep(5, 5), c(5, -5, 2, 0, 0), rep(-5, 5), rep(0, (p - 15)))
-#' y <- X %*% beta_star + eps
-#' groups <- rep(1:(p / 5), each = 5)
-#' fit1 <- sparsegl(X, y, group = groups)
-#' estimate_risk(fit1, type = "AIC", approx_df = TRUE)
+
 estimate_risk <- function(object, x,
                           type = c("AIC", "BIC", "GCV"),
                           approx_df = FALSE) {

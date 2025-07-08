@@ -42,7 +42,7 @@ sgl_logit <- function(
   gamma <- 0.25 * calc_gamma(x, ix, iy, bn)
 
   if (!is.sparse) {
-    print("CHECK!!!!")
+    #print("CHECK!!!!")
     fit <- dotCall64::.C64(
       "log_sparse_four",
       SIGNATURE = c("integer", "integer", "integer", "integer", "double",
@@ -71,7 +71,7 @@ sgl_logit <- function(
       NAOK = TRUE,
       PACKAGE = "hierNest")
   } else {
-    print("logit_sparse")
+    #print("logit_sparse")
      fit <- dotCall64::.C64(
       "log_spmat_four",
       SIGNATURE = c("integer", "integer", "integer", "integer", "double",
