@@ -8,14 +8,31 @@
 Efficient implementation of penalized regression with hierarchical nested parametrization for grouped data.
 }
 \author{
-\strong{Maintainer}: 
+\strong{Maintainer}: Ziren Jiang \email{jian0746@umn.edu}
+
+Authors:
+\itemize{
+  \item Jared Huling \email{huling@umn.edu}
+  \item Jue Hou \email{hou00123@umn.edu}
+  \item Lingfeng Huo
+}
 
 Other contributors:
 \itemize{
-  \item Ziren Jiang [contributor]
-  \item Jared Huling [contributor]
-  \item Jue Hou [contributor]
-  \item Lingfeng Huo [contributor]
+  \item Daniel J. McDonald [contributor]
+  \item Xiaoxuan Liang [contributor]
+  \item Anibal Solón Heinsfeld [contributor]
+  \item Aaron Cohen [contributor]
+  \item Yi Yang [contributor]
+  \item Hui Zou [contributor]
+  \item Jerome Friedman [contributor]
+  \item Trevor Hastie [contributor]
+  \item Rob Tibshirani [contributor]
+  \item Balasubramanian Narasimhan [contributor]
+  \item Kenneth Tay [contributor]
+  \item Noah Simon [contributor]
+  \item Junyang Qian [contributor]
+  \item James Yang [contributor]
 }
 
 }

@@ -15,7 +15,7 @@ cv.hierNest(
   lambda = NULL,
   pf_group = NULL,
   pf_sparse = NULL,
-  intercept = TRUE,
+  intercept = FALSE,
   asparse1 = c(0.5, 20),
   asparse2 = c(0.01, 0.2),
   asparse1_num = 4,

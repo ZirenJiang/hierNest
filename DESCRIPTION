@@ -1,8 +1,8 @@
 Type: Package
 Package: hierNest
 Title: Penalized regression with hierarchical nested parametrization sturcture
-Version: 1.0.2
-Date: 2025-06-06
+Version: 1.0.3
+Date: 2025-11-03
 Authors@R: c(
     person("Ziren", "Jiang",,"jian0746@umn.edu", role = c("aut","cre")),
     person("Jared", "Huling",,"huling@umn.edu", role = "aut"),
@@ -25,9 +25,9 @@ Authors@R: c(
   )
 Description: Efficient implementation of penalized regression with hierarchical nested parametrization for grouped data.
 License: GPL (>= 2)
-Depends: R (>= 3.5)
+Depends: R (>= 3.5), rTensor, plotly
 Imports: cli, dotCall64, ggplot2, magrittr, Matrix, methods, rlang,
-        RSpectra, tidyr, rTensor, pROC
+        RSpectra, tidyr, rTensor, pROC, rTensor, plotly
 Suggests: dplyr, gglasso, glmnet, knitr, markdown, rmarkdown, splines,
         testthat (>= 3.0.0)
 VignetteBuilder: knitr

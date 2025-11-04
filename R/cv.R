@@ -94,7 +94,7 @@ cv.sparsegl <- function(
   out <- list(lambda = lambda, cvm = cvm, cvsd = cvsd, cvupper = cvm + cvsd,
               cvlo = cvm - cvsd, name = cvname,
               nnzero = nnzero, active_grps = active_grps,
-              sparsegl.fit = sparsegl.object,
+              hierNest.fit = sparsegl.object,
               call = match.call())
   lamin <- getmin(lambda, cvm, cvsd)
   cv.inx=order(cvm)[1]

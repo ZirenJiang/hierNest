@@ -93,7 +93,7 @@ cv.hierNest = function(x, y,
                     lambda=NULL,
                     pf_group=NULL,
                     pf_sparse=NULL,
-                    intercept=TRUE,
+                    intercept=FALSE,
                     asparse1=c(0.5,20),
                     asparse2=c(0.01,0.2),
                     asparse1_num=4,
@@ -338,9 +338,10 @@ cv.hierNest = function(x, y,
         }
         
         res=minobj
-        res[["alpha1_seq"]]=alpha1_seq[order(minvalue_seq)]
-        res[["alpha2_seq"]]=alpha2_seq[order(minvalue_seq)]
-        
+        res[["min_alpha1"]] = alpha1_seq[order(minvalue_seq)][1]
+        res[["min_alpha2"]] = alpha2_seq[order(minvalue_seq)][1]
+        res[["hier.info"]] = hier_info
+        res[["X.names"]] = colnames(x)
         
         # for(n1 in 1:asparse1_num){
         #   for(n2 in 1:asparse2_num){
@@ -389,7 +390,7 @@ cv.hierNest = function(x, y,
         minvalue=NA
         
         for(n1 in 1:asparse_num){
-
+          
           if(n1==1){
             temp.res= cv.sparsegl(x.design.spars,y,
                                            group =group_use,family=family,
@@ -449,21 +450,19 @@ cv.hierNest = function(x, y,
             }
           }  
         }
-        res=minobj
-        res[["alpha1_seq"]]=alpha1_seq[order(minvalue_seq)]
-        res[["alpha2_seq"]]=alpha2_seq[order(minvalue_seq)]
+        res = minobj
+        res[["min_alpha1"]] = alpha1_seq[order(minvalue_seq)][1]
+        res[["min_alpha2"]] = alpha2_seq[order(minvalue_seq)][1]
+        res[["hier.info"]] = hier_info
+        res[["X.names"]] = colnames(x)
       }
+      class(res) <- "cv.hierNest"
+      
       return(res)
     }
   }
   
-  if(method=="sparsegl"){
-    
-  }
   
-  if(method=="general"){
-    
-  }
   
   
 }

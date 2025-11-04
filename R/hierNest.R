@@ -228,8 +228,10 @@ hierNest = function(x, y,
                          lower_bnd=lower_bnd,upper_bnd=upper_bnd,
                          eps=eps,maxit=maxit)
       
+      res$hier.info = hier_info
       
       
+      class(res) = "hierNest"
       
       return(res)
       
