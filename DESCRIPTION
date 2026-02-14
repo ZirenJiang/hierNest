@@ -1,6 +1,6 @@
 Type: Package
 Package: hierNest
-Title: Penalized regression with hierarchical nested parametrization sturcture
+Title: Penalized Regression with Hierarchical Nested Parameterization Structure
 Version: 1.0.3
 Date: 2025-11-03
 Authors@R: c(
@@ -23,17 +23,16 @@ Authors@R: c(
     person("Junyang", "Qian", role = "ctb"),
     person("James", "Yang", role = "ctb")
   )
-Description: Efficient implementation of penalized regression with hierarchical nested parametrization for grouped data.
+Description: Efficient implementation of penalized regression with hierarchical nested parametrization for grouped data. The package provides penalized regression methods that decompose subgroup-specific covariate effects into shared global effects, Major subgroup–specific effects, and Minor subgroup–specific effects, enabling structured borrowing of information across related clinical subgroups. Both lasso and hierarchical overlapping group lasso penalties are supported to encourage sparsity while respecting the nested subgroup structure. Efficient computation is achieved through a modified design matrix representation and a custom majorization–minimization algorithm for overlapping group penalties.
 License: GPL (>= 2)
-Depends: R (>= 3.5), rTensor, plotly
+Depends: R (>= 3.5),
 Imports: cli, dotCall64, ggplot2, magrittr, Matrix, methods, rlang,
-        RSpectra, tidyr, rTensor, pROC, rTensor, plotly
+        RSpectra, tidyr, rTensor, pROC, plotly
 Suggests: dplyr, gglasso, glmnet, knitr, markdown, rmarkdown, splines,
         testthat (>= 3.0.0)
-VignetteBuilder: knitr
 Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 NeedsCompilation: yes
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.3
 Maintainer: Ziren Jiang <jian0746@umn.edu>

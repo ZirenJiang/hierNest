@@ -1,21 +1,3 @@
-#' Plot solution paths from a `sparsegl` object.
-#'
-#' Produces a coefficient profile plot of a fitted
-#' [sparsegl()] object. The result is a [ggplot2::ggplot()]. Additional user
-#' modifications can be added as desired.
-#'
-#' @param x Fitted `"sparsegl"` object, produced by [sparsegl()].
-#' @param y_axis Variable on the y_axis. Either the coefficients (default)
-#'   or the group norm.
-#' @param x_axis Variable on the x-axis. Either the (log)-lambda
-#'   sequence (default) or the value of the penalty. In the second case,
-#'   the penalty is scaled by its maximum along the path.
-#' @param add_legend Show the legend. Often, with many groups/predictors, this
-#'   can become overwhelming. The default produces a legend if the number of
-#'   groups/predictors is less than 20.
-#' @param ... Not used.
-#' @seealso [sparsegl()].
-
 
 plot.sparsegl <- function(x,
                           y_axis = c("coef", "group"),

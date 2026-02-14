@@ -40,7 +40,7 @@ By specifying the type = "coefficients", we plot all non-zero coefficient includ
 plot(cv.fit, type = "coefficients")
 ```
 
-![](README2_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](man/figures/unnamed-chunk-3-1.png)<!-- -->
 
 By specifying the type = "Subgroup effect", we plot the covaraite effects for each subgroup.
 
@@ -48,7 +48,7 @@ By specifying the type = "Subgroup effect", we plot the covaraite effects for ea
 plot(cv.fit, type = "Subgroup effects")
 ```
 
-![](README2_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](man/figures/unnamed-chunk-4-1.png)<!-- -->
 
 ## Grab chosen lambda and coefficients
 

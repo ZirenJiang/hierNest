@@ -3,11 +3,14 @@
 #' @param x An object of class \code{cv.hierNest}
 #' @param type Plot type, e.g. "fit" for observed vs fitted (default),
 #'   others you may add later (e.g., "coef").
+#' @param ... Other parameters
 #' @return Invisibly returns \code{x}
 #' @export
 #' @method plot cv.hierNest
 #' 
-plot.cv.hierNest <- function(x, type = c("coefficients","Subgroup effects")) {
+plot.cv.hierNest <- function(x, type = c("coefficients","Subgroup effects"),...) {
+  
+  type <- match.arg(type)
   
   cv.fit = x
   
@@ -60,7 +63,7 @@ plot.cv.hierNest <- function(x, type = c("coefficients","Subgroup effects")) {
     
     col_labels = colnames(beta_set_nonzero)
     
-    plotobj = plot_ly(
+    plotobj = plotly::plot_ly(
       data = df,
       x = ~col,          # same direction as ggplot
       y = ~row,
@@ -137,7 +140,7 @@ plot.cv.hierNest <- function(x, type = c("coefficients","Subgroup effects")) {
     
     col_labels = colnames(beta_set_nonzero)
     
-    plotobj = plot_ly(
+    plotobj = plotly::plot_ly(
       data = df,
       x = ~col,          # same direction as ggplot
       y = ~row,

@@ -3,9 +3,9 @@
 \docType{package}
 \name{hierNest-package}
 \alias{hierNest-package}
-\title{hierNest: Penalized regression with hierarchical nested parametrization sturcture}
+\title{hierNest: Penalized Regression with Hierarchical Nested Parameterization Structure}
 \description{
-Efficient implementation of penalized regression with hierarchical nested parametrization for grouped data.
+Efficient implementation of penalized regression with hierarchical nested parametrization for grouped data. The package provides penalized regression methods that decompose subgroup-specific covariate effects into shared global effects, Major Diagnostic Category (MDC)–specific effects, and Diagnosis Related Group (DRG)–specific effects, enabling structured borrowing of information across related clinical subgroups. Both lasso and hierarchical overlapping group lasso penalties are supported to encourage sparsity while respecting the nested subgroup structure. Efficient computation is achieved through a modified design matrix representation and a custom majorization–minimization algorithm for overlapping group penalties.
 }
 \author{
 \strong{Maintainer}: Ziren Jiang \email{jian0746@umn.edu}
@@ -36,3 +36,4 @@ Other contributors:
 }
 
 }
+\keyword{internal}

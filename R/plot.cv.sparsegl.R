@@ -1,18 +1,3 @@
-#' Plot cross-validation curves produced from a `cv.sparsegl` object.
-#'
-#' Plots the cross-validation curve, and upper and lower standard deviation
-#' curves, as a function of the `lambda` values used.
-#'
-#' A [ggplot2::ggplot()] plot is produced. Additional user
-#' modifications may be added as desired.
-#'
-#' @param x Fitted `"cv.sparsegl"` object, produced with [cv.sparsegl()].
-#' @param log_axis Apply log scaling to the requested axes.
-#' @param sign.lambda Either plot against `log(lambda)` (default) or the
-#'    reverse if `sign.lambda < 0`.
-#' @param ... Not used.
-#' @seealso [cv.sparsegl()].
-#' @method plot cv.sparsegl
 
 
 plot.cv.sparsegl <- function(x, log_axis = c("xy", "x", "y", "none"),

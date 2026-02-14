@@ -1,2 +1,9 @@
 ^.*\.Rproj$
 ^\.Rproj\.user$
+^\.github$
+^README\.Rmd$
+^README2\.Rmd$
+^README2\.md$
+^README2_files$
+^example_data\.Rdata$
+^cran-comments\.md

@@ -4,13 +4,15 @@
 \alias{plot.cv.hierNest}
 \title{Plot method for cv.hierNest objects}
 \usage{
-\method{plot}{cv.hierNest}(x, type = c("coefficients", "Subgroup effects"))
+\method{plot}{cv.hierNest}(x, type = c("coefficients", "Subgroup effects"), ...)
 }
 \arguments{
 \item{x}{An object of class \code{cv.hierNest}}
 
 \item{type}{Plot type, e.g. "fit" for observed vs fitted (default),
 others you may add later (e.g., "coef").}
+
+\item{...}{Other parameters}
 }
 \value{
 Invisibly returns \code{x}
