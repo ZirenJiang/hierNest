@@ -3,19 +3,4 @@ template:
   params:
     bootswatch: cerulean
 
-development:
-  mode: release
-
-navbar:
-  structure:
-    left: [home, reference]
-    right: [github]
-  components:
-    home:
-      icon: fas fa-home fa-lg
-      href: index.html
-    reference:
-      text: Reference
-      href: reference/index.html
-
-url: https://jaredhuling.org/hierNest/
+url: https://ZirenJiang.github.io/hierNest/
