@@ -4,6 +4,15 @@ template:
     bootswatch: cerulean
     
 navbar:
-  type: default
+  structure:
+    left: [home, reference]
+    right: [github]
+  components:
+    home:
+      icon: fas fa-home fa-lg
+      href: index.html
+    reference:
+      text: Reference
+      href: reference/index.html
   
-url: https://jaredhuling.github.io/hierNest/
+url: https://jaredhuling.org/hierNest/

@@ -48,7 +48,7 @@ head(example_data$hier_info)
 # Fit models and select tuning parameters via cross-validation
 
 The
-[`cv.hierNest()`](https://jaredhuling.github.io/hierNest/reference/cv.hierNest.md)
+[`cv.hierNest()`](https://jaredhuling.org/hierNest/reference/cv.hierNest.md)
 function both fits models and selects tuning parameters via $`K`$-fold
 cross validation.
 

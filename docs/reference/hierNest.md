@@ -122,7 +122,7 @@ hierNest(
 ## Value
 
 Returns a model fit object as produced by
-[`hierNest::overlapping_gl`](https://jaredhuling.github.io/hierNest/reference/overlapping_gl.md),
+[`hierNest::overlapping_gl`](https://jaredhuling.org/hierNest/reference/overlapping_gl.md),
 including selected coefficients, cross-validation results, and tuning
 parameters.
 
@@ -134,7 +134,7 @@ Diagnosis Related Groups \[DRGs\]), encoding overall, group-specific,
 and subgroup-specific effects. It fits a penalized model using
 overlapping group lasso, as described in Jiang et al. (2024, submitted).
 The main computational engine is
-[`hierNest::overlapping_gl`](https://jaredhuling.github.io/hierNest/reference/overlapping_gl.md).
+[`hierNest::overlapping_gl`](https://jaredhuling.org/hierNest/reference/overlapping_gl.md).
 
 ## References
 

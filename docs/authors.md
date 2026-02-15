@@ -42,12 +42,12 @@
 
 Jiang Z, Huling J, Hou J, Huo L (2026). *hierNest: Penalized Regression
 with Hierarchical Nested Parameterization Structure*. R package version
-1.0.3, <https://jaredhuling.github.io/hierNest/>.
+1.0.3, <https://jaredhuling.org/hierNest/>.
 
     @Manual{,
       title = {hierNest: Penalized Regression with Hierarchical Nested Parameterization Structure},
       author = {Ziren Jiang and Jared Huling and Jue Hou and Lingfeng Huo},
       year = {2026},
       note = {R package version 1.0.3},
-      url = {https://jaredhuling.github.io/hierNest/},
+      url = {https://jaredhuling.org/hierNest/},
     }
