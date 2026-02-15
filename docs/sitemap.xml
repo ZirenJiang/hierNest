@@ -1,0 +1,23 @@
+<urlset xmlns = 'http://www.sitemaps.org/schemas/sitemap/0.9'>
+<url><loc>/404.html</loc></url>
+<url><loc>/authors.html</loc></url>
+<url><loc>/index.html</loc></url>
+<url><loc>/reference/coef.cv.sparsegl.html</loc></url>
+<url><loc>/reference/coef.sparsegl.html</loc></url>
+<url><loc>/reference/cv.hierNest.html</loc></url>
+<url><loc>/reference/estimate_risk.html</loc></url>
+<url><loc>/reference/example_data.html</loc></url>
+<url><loc>/reference/grouped_sp_norm.html</loc></url>
+<url><loc>/reference/hierNest-package.html</loc></url>
+<url><loc>/reference/hierNest.html</loc></url>
+<url><loc>/reference/index.html</loc></url>
+<url><loc>/reference/make_irls_warmup.html</loc></url>
+<url><loc>/reference/overlapping_gl.html</loc></url>
+<url><loc>/reference/pipe.html</loc></url>
+<url><loc>/reference/plot.cv.hierNest.html</loc></url>
+<url><loc>/reference/predict.cv.sparsegl.html</loc></url>
+<url><loc>/reference/predict.sparsegl.html</loc></url>
+<url><loc>/reference/predict_hierNest.html</loc></url>
+<url><loc>/reference/trust_experts.html</loc></url>
+</urlset>
+
