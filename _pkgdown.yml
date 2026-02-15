@@ -1,0 +1,9 @@
+template:
+  bootstrap: 5
+  params:
+    bootswatch: cerulean
+    
+navbar:
+  type: default
+  
+url: https://jaredhuling.github.io/hierNest/
