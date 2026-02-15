@@ -2,7 +2,10 @@ template:
   bootstrap: 5
   params:
     bootswatch: cerulean
-    
+
+development:
+  mode: release
+
 navbar:
   structure:
     left: [home, reference]
