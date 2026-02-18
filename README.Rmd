@@ -1,0 +1,120 @@
+---
+output: github_document
+---
+
+
+```{r, include = FALSE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+library(htmlwidgets)
+library(plotly)
+```
+
+# hierNest
+
+The `hierNest` package allows for the fitting of penalized GLMs with covariate effects that vary by discrete and hierarchically-organized groups. The methodology allows for the shrinkage of group-specific models to a global model or to higher level groups. For example, if groups are defined based on primary diagnoses and then diagnoses are organized into body systems, `hierNest` will allow models to vary for each diagnosis or could be collapsed via penalization to body-system specific models or fully to a global model in common for all groups, all on a variable-by-variable basis.
+
+## Example
+
+Load the package and an example dataset
+
+```{r example_data}
+library(hierNest)
+
+data("example_data")
+
+str(example_data)
+```
+
+The data structure `hier_info` contains hierarchical information about group membership. The last column represents the finest description of group membership (eg primary diagnosis) and the first column represents the coarsest definition of group (eg body system).
+
+```{r hierdat}
+head(example_data$hier_info)
+```
+
+# Fit models and select tuning parameters via cross-validation
+
+The `cv.hierNest()` function both fits models and selects tuning parameters via $K$-fold cross validation.
+
+```{r}
+cv.fit=cv.hierNest(example_data$X,
+                   example_data$Y,
+                   method="overlapping",# For now, we only wrap-up the overlapping group lasso method in this function
+                   hier_info=example_data$hier_info,
+                   family="binomial",
+                   partition = "subgroup", # partition = "subgroup" make sure the each n-fold is sampled within the subgroups to avoid extreme cases
+                   cvmethod = "grid_search", # cvmethod = "grid_search" indicate the second cross-validation method
+                   asparse1 = c(0.5,20), # Input the upper and lower bounds of alpha_1 and alpha_2
+                   asparse2 = c(0.05,0.20), 
+                   asparse1_num = 3, # number of grids for alpha_1 and alpha_2, total 3*3 = 9 grids will be screened
+                   asparse2_num = 3, 
+                   nlambda = 50, # length of lambda sequence for each pair of alpha_1 and alpha_2
+                   )
+```
+
+
+# Results
+
+## Plot the coefficients
+
+By specifying the type = "coefficients", we plot all non-zero coefficient including the overall mean, group-specific, and subgroup specific.
+
+```{r eval=FALSE}
+plot(cv.fit, type = "coefficients")
+```
+
+![](man/figures/unnamed-chunk-3-1.png)<!-- -->
+
+```{r include = FALSE}
+# p1 <- plot(cv.fit, type = "coefficients")
+# saveWidget(as_widget(p1), "man/figures/plotly_widget_1.html", selfcontained = TRUE)
+# htmltools::tags$iframe(
+#   src = "man/figures/plotly_widget_1.html",
+#   scrolling = "no",
+#   seamless = "seamless",
+#   frameBorder = "0"
+# )
+# # #saveWidget(as_widget(p1), "man/figures/plotly_widget_1.html", selfcontained = TRUE)
+# # plotly::save_image(p1, "man/figures/plotly_coef_plot_1.png")
+```
+
+
+
+
+
+
+
+By specifying the type = "Subgroup effect", we plot the covariate effects for each subgroup.
+
+```{r eval=FALSE}
+plot(cv.fit, type = "Subgroup effects")
+```
+![](man/figures/unnamed-chunk-4-1.png)<!-- -->
+
+```{r include=FALSE}
+p2 <- plot(cv.fit, type = "Subgroup effects")
+# saveWidget(as_widget(p2), "man/figures/plotly_widget_2.html", selfcontained = TRUE)
+```
+
+
+## Grab chosen lambda and coefficients
+
+```{r}
+cv.fit$lambda.min    # lambda minimizing CV loss
+```
+
+
+```{r}
+cv.fit$min_alpha1    # alpha1 minimizing CV loss
+```
+
+```{r}
+cv.fit$min_alpha2    # lambda minimizing CV loss
+```
+
+
+

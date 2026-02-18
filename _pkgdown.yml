@@ -1,0 +1,6 @@
+template:
+  bootstrap: 5
+  params:
+    bootswatch: cerulean
+
+url: https://ZirenJiang.github.io/hierNest/
