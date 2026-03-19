@@ -7,6 +7,7 @@
 ^README2_files$
 ^example_data\.Rdata$
 ^cran-comments\.md
+<<<<<<< HEAD
 ^_pkgdown\.yml$
 ^docs$
-^pkgdown$
+_pkgdown.yml

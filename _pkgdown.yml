@@ -1,11 +1,6 @@
-url: https://github.com/ZirenJiang/hierNest
-
 template:
   bootstrap: 5
+  params:
+    bootswatch: cerulean
 
-authors:
-  Ziren Jiang:
-    href: https://github.com/ZirenJiang
-
-development:
-  mode: auto
+url: https://ZirenJiang.github.io/hierNest/
