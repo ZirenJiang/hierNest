@@ -1,8 +1,8 @@
 Type: Package
 Package: hierNest
 Title: Penalized Regression with Hierarchical Nested Parameterization Structure
-Version: 1.0.3
-Date: 2025-11-03
+Version: 1.0.0
+Date: 2026-03-02
 Authors@R: c(
     person("Ziren", "Jiang",,"jian0746@umn.edu", role = c("aut","cre")),
     person("Jared", "Huling",,"huling@umn.edu", role = "aut"),
@@ -23,7 +23,7 @@ Authors@R: c(
     person("Junyang", "Qian", role = "ctb"),
     person("James", "Yang", role = "ctb")
   )
-Description: Efficient implementation of penalized regression with hierarchical nested parametrization for grouped data. The package provides penalized regression methods that decompose subgroup-specific covariate effects into shared global effects, Major subgroup–specific effects, and Minor subgroup–specific effects, enabling structured borrowing of information across related clinical subgroups. Both lasso and hierarchical overlapping group lasso penalties are supported to encourage sparsity while respecting the nested subgroup structure. Efficient computation is achieved through a modified design matrix representation and a custom majorization–minimization algorithm for overlapping group penalties.
+Description: Efficient implementation of penalized regression with hierarchical nested parametrization for grouped data. The package provides penalized regression methods that decompose subgroup specific effects into shared global effects, Major subgroup specific effects, and Minor subgroup specific effects, enabling structured borrowing of information across related clinical subgroups. Both lasso and hierarchical overlapping group lasso penalties are supported to encourage sparsity while respecting the nested subgroup structure. Efficient computation is achieved through a modified design matrix representation and a custom majorization minimization algorithm for overlapping group penalties.
 License: GPL (>= 2)
 Depends: R (>= 3.5),
 Imports: cli, dotCall64, ggplot2, magrittr, Matrix, methods, rlang,
@@ -36,3 +36,5 @@ LazyData: true
 NeedsCompilation: yes
 RoxygenNote: 7.3.3
 Maintainer: Ziren Jiang <jian0746@umn.edu>
+URL: https://github.com/ZirenJiang/hierNest
+BugReports: https://github.com/ZirenJiang/hierNest/issues

@@ -66,29 +66,7 @@
 #' @references
 #' Jiang, Z., Huo, L., Hou, J., & Huling, J. D.
 #' "Heterogeneous readmission prediction with hierarchical effect decomposition and regularization".
-#' 
-#'
-#' @seealso
-#' [glmnet::glmnet()], [hierNest::cv.sparsegl()]
-#'
-#' @examples
-#'library(hierNest)
-#'data("example_data")
-#'\donttest{
-#'cv.fit=cv.hierNest(example_data$X,
-#'                   example_data$Y,
-#'                   method="overlapping",
-#'                   hier_info=example_data$hier_info,
-#'                   family="binomial",
-#'                   partition = "subgroup",  
-#'                   cvmethod = "grid_search", 
-#'                   asparse1 = c(0.5, 1), 
-#'                   asparse2 = c(0.05, 0.20), 
-#'                   nlambda = 50)}
-#'
 #' @export
-#' 
-#' 
 cv.hierNest = function(x, y, 
                     group = NULL,
                     family = c("gaussian", "binomial"),

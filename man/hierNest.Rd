@@ -82,22 +82,7 @@ This function builds a hierarchical design matrix reflecting group/subgroup stru
 and Diagnosis Related Groups [DRGs]), encoding overall, group-specific, and subgroup-specific effects. It fits a penalized model
 using overlapping group lasso, as described in Jiang et al. (2024, submitted). The main computational engine is \code{hierNest::overlapping_gl}.
 }
-\examples{
-# Example with toy data
-library(hierNest)
-data("example_data")
-\donttest{
-fit = hierNest(example_data$X,
-              example_data$Y,
-              hier_info=example_data$hier_info,
-              family="binomial",
-              asparse1 = 1,
-              asparse2 = 1)}
-}
 \references{
 Jiang, Z., Huo, L., Hou, J., Vaughan-Sarrazin, M., Smith, M. A., & Huling, J. D. (2024).
 Heterogeneous readmission prediction with hierarchical effect decomposition and regularization.
-}
-\seealso{
-[hierNest::overlapping_gl()]
 }

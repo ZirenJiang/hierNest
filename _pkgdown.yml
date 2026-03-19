@@ -1,0 +1,11 @@
+url: https://github.com/ZirenJiang/hierNest
+
+template:
+  bootstrap: 5
+
+authors:
+  Ziren Jiang:
+    href: https://github.com/ZirenJiang
+
+development:
+  mode: auto

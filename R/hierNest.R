@@ -40,22 +40,7 @@
 #' @references
 #' Jiang, Z., Huo, L., Hou, J., Vaughan-Sarrazin, M., Smith, M. A., & Huling, J. D. (2024).
 #' Heterogeneous readmission prediction with hierarchical effect decomposition and regularization. 
-#'
-#' @seealso [hierNest::overlapping_gl()]
-#'
-#' @examples
-#' # Example with toy data
-#'library(hierNest)
-#'data("example_data")
-#'\donttest{
-#'fit = hierNest(example_data$X,
-#'               example_data$Y,
-#'               hier_info=example_data$hier_info,
-#'               family="binomial",
-#'               asparse1 = 1,
-#'               asparse2 = 1)}
 #' @export
-#' 
 hierNest = function(x, y, 
                     group = NULL,
                     family = c("gaussian", "binomial"),

@@ -1,0 +1,66 @@
+# Make predictions from a \`sparsegl\` object.
+
+Similar to other predict methods, this function produces fitted values
+and class labels from a fitted \[\`sparsegl\`\] object.
+
+## Usage
+
+``` r
+# S3 method for class 'sparsegl'
+predict(
+  object,
+  newx,
+  s = NULL,
+  type = c("link", "response", "coefficients", "nonzero", "class"),
+  ...
+)
+```
+
+## Arguments
+
+- object:
+
+  Fitted \[sparsegl()\] model object.
+
+- newx:
+
+  Matrix of new values for \`x\` at which predictions are to be made.
+  Must be a matrix. This argument is mandatory.
+
+- s:
+
+  Value(s) of the penalty parameter \`lambda\` at which predictions are
+  required. Default is the entire sequence used to create the model.
+
+- type:
+
+  Type of prediction required. Type \`"link"\` gives the linear
+  predictors for \`"binomial"\`; for \`"gaussian"\` models it gives the
+  fitted values. Type \`"response"\` gives predictions on the scale of
+  the response (for example, fitted probabilities for \`"binomial"\`);
+  for \`"gaussian"\` type \`"response"\` is equivalent to type
+  \`"link"\`. Type \`"coefficients"\` computes the coefficients at the
+  requested values for \`s\`. Type \`"class"\` applies only to
+  \`"binomial"\` models, and produces the class label corresponding to
+  the maximum probability. Type \`"nonzero"\` returns a list of the
+  indices of the nonzero coefficients for each value of `s`.
+
+- ...:
+
+  Not used.
+
+## Value
+
+The object returned depends on type.
+
+## Details
+
+\`s\` is the new vector of \`lambda\` values at which predictions are
+requested. If \`s\` is not in the lambda sequence used for fitting the
+model, the \`coef\` function will use linear interpolation to make
+predictions. The new values are interpolated using a fraction of
+coefficients from both left and right \`lambda\` indices.
+
+## See also
+
+\[sparsegl()\], \[coef.sparsegl()\].

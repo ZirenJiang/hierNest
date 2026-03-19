@@ -7,3 +7,6 @@
 ^README2_files$
 ^example_data\.Rdata$
 ^cran-comments\.md
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
