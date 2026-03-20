@@ -4,3 +4,9 @@ template:
     bootswatch: cerulean
 
 url: https://ZirenJiang.github.io/hierNest/
+
+articles:
+  - title: "Vignettes"
+    navbar: ~
+    contents:
+      - hierNest_vignette

@@ -11,18 +11,18 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Penalized Regression with Hierarchical Nested Parameterization Structure">
-<meta name="description" content="Efficient implementation of penalized regression with hierarchical nested parametrization for grouped data. The package provides penalized regression methods that decompose subgroup-specific covariate effects into shared global effects, Major subgroup–specific effects, and Minor subgroup–specific effects, enabling structured borrowing of information across related clinical subgroups. Both lasso and hierarchical overlapping group lasso penalties are supported to encourage sparsity while respecting the nested subgroup structure. Efficient computation is achieved through a modified design matrix representation and a custom majorization–minimization algorithm for overlapping group penalties.">
-<meta property="og:description" content="Efficient implementation of penalized regression with hierarchical nested parametrization for grouped data. The package provides penalized regression methods that decompose subgroup-specific covariate effects into shared global effects, Major subgroup–specific effects, and Minor subgroup–specific effects, enabling structured borrowing of information across related clinical subgroups. Both lasso and hierarchical overlapping group lasso penalties are supported to encourage sparsity while respecting the nested subgroup structure. Efficient computation is achieved through a modified design matrix representation and a custom majorization–minimization algorithm for overlapping group penalties.">
+<meta name="description" content="Efficient implementation of penalized regression with hierarchical nested parametrization for grouped data. The package provides penalized regression methods that decompose subgroup specific effects into shared global effects, Major subgroup specific effects, and Minor subgroup specific effects, enabling structured borrowing of information across related clinical subgroups. Both lasso and hierarchical overlapping group lasso penalties are supported to encourage sparsity while respecting the nested subgroup structure. Efficient computation is achieved through a modified design matrix representation and a custom majorization minimization algorithm for overlapping group penalties.">
+<meta property="og:description" content="Efficient implementation of penalized regression with hierarchical nested parametrization for grouped data. The package provides penalized regression methods that decompose subgroup specific effects into shared global effects, Major subgroup specific effects, and Minor subgroup specific effects, enabling structured borrowing of information across related clinical subgroups. Both lasso and hierarchical overlapping group lasso penalties are supported to encourage sparsity while respecting the nested subgroup structure. Efficient computation is achieved through a modified design matrix representation and a custom majorization minimization algorithm for overlapping group penalties.">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
+    <nav class="navbar navbar-expand-lg fixed-top bg-primary" data-bs-theme="dark" aria-label="Site navigation"><div class="container">
 
     <a class="navbar-brand me-2" href="index.html">hierNest</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">1.0.3</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -32,12 +32,18 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/hierNest_vignette.html">Getting Started with hierNest</a></li>
+  </ul>
+</li>
       </ul>
 <ul class="navbar-nav">
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
-<li class="nav-item"><a class="nav-link" href="https://github.com/ZirenJiang/hierNest/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/ZirenJiang/hierNest/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -46,26 +52,47 @@
 </nav><div class="container template-home">
 <div class="row">
   <main id="main" class="col-md-9"><div class="section level1">
-<div class="page-header"><h1 id="simple-guidance-on-hiernest-package">Simple guidance on hierNest package<a class="anchor" aria-label="anchor" href="#simple-guidance-on-hiernest-package"></a>
+<div class="page-header"><h1 id="hiernest">hierNest<a class="anchor" aria-label="anchor" href="#hiernest"></a>
 </h1></div>
-<p>2025-11-03</p>
-</div>
-<div class="section level1">
-<h1 id="load-example-data">Load example data<a class="anchor" aria-label="anchor" href="#load-example-data"></a>
-</h1>
+<p>The <code>hierNest</code> package allows for the fitting of penalized GLMs with covariate effects that vary by discrete and hierarchically-organized groups. The methodology allows for the shrinkage of group-specific models to a global model or to higher level groups. For example, if groups are defined based on primary diagnoses and then diagnoses are organized into body systems, <code>hierNest</code> will allow models to vary for each diagnosis or could be collapsed via penalization to body-system specific models or fully to a global model in common for all groups, all on a variable-by-variable basis.</p>
+<div class="section level2">
+<h2 id="example">Example<a class="anchor" aria-label="anchor" href="#example"></a>
+</h2>
+<p>Load the package and an example dataset</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ZirenJiang/hierNest">hierNest</a></span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/ZirenJiang/hierNest" class="external-link">hierNest</a></span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"example_data"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">example_data</span><span class="op">)</span></span>
+<span><span class="co">#&gt; List of 3</span></span>
+<span><span class="co">#&gt;  $ X        : num [1:200, 1:30] -1.715 1.001 -1.551 -0.214 0.616 ...</span></span>
+<span><span class="co">#&gt;   ..- attr(*, "dimnames")=List of 2</span></span>
+<span><span class="co">#&gt;   .. ..$ : NULL</span></span>
+<span><span class="co">#&gt;   .. ..$ : chr [1:30] "X1" "X2" "X3" "X4" ...</span></span>
+<span><span class="co">#&gt;  $ Y        : num [1:200] 0 1 0 1 0 0 0 0 0 0 ...</span></span>
+<span><span class="co">#&gt;  $ hier_info: num [1:200, 1:2] 1 1 1 1 1 1 1 1 1 1 ...</span></span></code></pre></div>
+<p>The data structure <code>hier_info</code> contains hierarchical information about group membership. The last column represents the finest description of group membership (eg primary diagnosis) and the first column represents the coarsest definition of group (eg body system).</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">data</span><span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/readRDS.html" class="external-link">readRDS</a></span><span class="op">(</span><span class="st">"./example_data.Rdata"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">example_data</span><span class="op">$</span><span class="va">hier_info</span><span class="op">)</span></span>
+<span><span class="co">#&gt;      [,1] [,2]</span></span>
+<span><span class="co">#&gt; [1,]    1    1</span></span>
+<span><span class="co">#&gt; [2,]    1    1</span></span>
+<span><span class="co">#&gt; [3,]    1    1</span></span>
+<span><span class="co">#&gt; [4,]    1    1</span></span>
+<span><span class="co">#&gt; [5,]    1    1</span></span>
+<span><span class="co">#&gt; [6,]    1    1</span></span></code></pre></div>
+</div>
 </div>
 <div class="section level1">
-<h1 id="run-cross-validation">Run cross-validation<a class="anchor" aria-label="anchor" href="#run-cross-validation"></a>
+<h1 id="fit-models-and-select-tuning-parameters-via-cross-validation">Fit models and select tuning parameters via cross-validation<a class="anchor" aria-label="anchor" href="#fit-models-and-select-tuning-parameters-via-cross-validation"></a>
 </h1>
+<p>The <code><a href="reference/cv.hierNest.html">cv.hierNest()</a></code> function both fits models and selects tuning parameters via <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>K</mi><annotation encoding="application/x-tex">K</annotation></semantics></math>-fold cross validation.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cv.fit</span><span class="op">=</span><span class="fu"><a href="reference/cv.hierNest.html">cv.hierNest</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">X</span>,</span>
-<span>                   <span class="va">data</span><span class="op">$</span><span class="va">Y</span>,</span>
+<code class="sourceCode R"><span><span class="va">cv.fit</span><span class="op">=</span><span class="fu"><a href="reference/cv.hierNest.html">cv.hierNest</a></span><span class="op">(</span><span class="va">example_data</span><span class="op">$</span><span class="va">X</span>,</span>
+<span>                   <span class="va">example_data</span><span class="op">$</span><span class="va">Y</span>,</span>
 <span>                   method<span class="op">=</span><span class="st">"overlapping"</span>,<span class="co"># For now, we only wrap-up the overlapping group lasso method in this function</span></span>
-<span>                   hier_info<span class="op">=</span><span class="va">data</span><span class="op">$</span><span class="va">hier_info</span>,</span>
+<span>                   hier_info<span class="op">=</span><span class="va">example_data</span><span class="op">$</span><span class="va">hier_info</span>,</span>
 <span>                   family<span class="op">=</span><span class="st">"binomial"</span>,</span>
 <span>                   partition <span class="op">=</span> <span class="st">"subgroup"</span>, <span class="co"># partition = "subgroup" make sure the each n-fold is sampled within the subgroups to avoid extreme cases</span></span>
 <span>                   cvmethod <span class="op">=</span> <span class="st">"grid_search"</span>, <span class="co"># cvmethod = "grid_search" indicate the second cross-validation method</span></span>
@@ -86,7 +113,7 @@
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cv.fit</span>, type <span class="op">=</span> <span class="st">"coefficients"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/unnamed-chunk-3-1.png"><!-- --></p>
-<p>By specifying the type = “Subgroup effect”, we plot the covaraite effects for each subgroup.</p>
+<p>By specifying the type = “Subgroup effect”, we plot the covariate effects for each subgroup.</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">cv.fit</span>, type <span class="op">=</span> <span class="st">"Subgroup effects"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/unnamed-chunk-4-1.png"><!-- --></p>
@@ -95,22 +122,22 @@
 <h2 id="grab-chosen-lambda-and-coefficients">Grab chosen lambda and coefficients<a class="anchor" aria-label="anchor" href="#grab-chosen-lambda-and-coefficients"></a>
 </h2>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cv.fit</span><span class="op">$</span><span class="va">lambda.min</span>    <span class="co"># lambda minimizing CV loss</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.0005147827</span></span></code></pre>
+<code class="sourceCode R"><span><span class="va">cv.fit</span><span class="op">$</span><span class="va">lambda.min</span>    <span class="co"># lambda minimizing CV loss</span></span>
+<span><span class="co">#&gt; [1] 0.00056551</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">cv.fit</span><span class="op">$</span><span class="va">min_alpha1</span>    <span class="co"># alpha1 minimizing CV loss</span></span>
+<span><span class="co">#&gt; [1] 0.5</span></span></code></pre></div>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cv.fit</span><span class="op">$</span><span class="va">min_alpha1</span>    <span class="co"># alpha1 minimizing CV loss</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.5</span></span></code></pre>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">cv.fit</span><span class="op">$</span><span class="va">min_alpha2</span>    <span class="co"># lambda minimizing CV loss</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.2</span></span></code></pre>
+<code class="sourceCode R"><span><span class="va">cv.fit</span><span class="op">$</span><span class="va">min_alpha2</span>    <span class="co"># lambda minimizing CV loss</span></span>
+<span><span class="co">#&gt; [1] 0.2</span></span></code></pre></div>
 </div>
 </div>
 
   </main><aside class="col-md-3"><div class="links">
 <h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li><a href="https://github.com/ZirenJiang/hierNest/">Browse source code</a></li>
-<li><a href="https://github.com/ZirenJiang/hierNest/issues">Report a bug</a></li>
+<li><a href="https://github.com/ZirenJiang/hierNest/" class="external-link">Browse source code</a></li>
+<li><a href="https://github.com/ZirenJiang/hierNest/issues" class="external-link">Report a bug</a></li>
 </ul>
 </div>
 
@@ -132,8 +159,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>
-<a href="https://github.com/ZirenJiang" class="external-link">Ziren Jiang</a> <br><small class="roles"> Author, maintainer </small>   </li>
+<li>Ziren Jiang <br><small class="roles"> Author, maintainer </small>   </li>
 <li>Jared Huling <br><small class="roles"> Author </small>   </li>
 <li>Jue Hou <br><small class="roles"> Author </small>   </li>
 <li>Lingfeng Huo <br><small class="roles"> Author </small>   </li>
@@ -148,7 +174,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by <a href="https://github.com/ZirenJiang" class="external-link">Ziren Jiang</a>, Jared Huling, Jue Hou, Lingfeng Huo.</p>
+  <p>Developed by Ziren Jiang, Jared Huling, Jue Hou, Lingfeng Huo.</p>
 </div>
 
 <div class="pkgdown-footer-right">

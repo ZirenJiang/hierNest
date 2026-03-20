@@ -1,8 +1,9 @@
 pandoc: 3.1.1
 pkgdown: 2.2.0
 pkgdown_sha: ~
-articles: {}
-last_built: 2026-03-03T01:38Z
+articles:
+  hierNest_vignette: hierNest_vignette.html
+last_built: 2026-03-20T00:37Z
 urls:
-  reference: https://github.com/ZirenJiang/hierNest/reference
-  article: https://github.com/ZirenJiang/hierNest/articles
+  reference: https://ZirenJiang.github.io/hierNest/reference
+  article: https://ZirenJiang.github.io/hierNest/articles

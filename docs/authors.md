@@ -2,7 +2,7 @@
 
 ## Authors
 
-- **[Ziren Jiang](https://github.com/ZirenJiang)**. Author, maintainer.
+- **Ziren Jiang**. Author, maintainer.
 
 - **Jared Huling**. Author.
 
@@ -45,12 +45,12 @@ Source:
 
 Jiang Z, Huling J, Hou J, Huo L (2026). *hierNest: Penalized Regression
 with Hierarchical Nested Parameterization Structure*. R package version
-1.0.3, <https://github.com/ZirenJiang/hierNest>.
+1.0.0, <https://github.com/ZirenJiang/hierNest>.
 
     @Manual{,
       title = {hierNest: Penalized Regression with Hierarchical Nested Parameterization Structure},
       author = {Ziren Jiang and Jared Huling and Jue Hou and Lingfeng Huo},
       year = {2026},
-      note = {R package version 1.0.3},
+      note = {R package version 1.0.0},
       url = {https://github.com/ZirenJiang/hierNest},
     }

@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Ziren Jiang, Lingfeng Huo, Jue Hou, and Jared D. Huling" />
+
+<meta name="date" content="2026-03-19" />
+
+<title>Getting Started with hierNest</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Getting Started with hierNest</h1>
+<h4 class="author">Ziren Jiang, Lingfeng Huo, Jue Hou, and Jared D.
+Huling</h4>
+<h4 class="date">2026-03-19</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction" id="toc-introduction"><span class="toc-section-number">1</span> Introduction</a>
+<ul>
+<li><a href="#motivation" id="toc-motivation"><span class="toc-section-number">1.1</span> Motivation</a></li>
+<li><a href="#two-penalization-strategies" id="toc-two-penalization-strategies"><span class="toc-section-number">1.2</span> Two penalization
+strategies</a></li>
+<li><a href="#package-scope" id="toc-package-scope"><span class="toc-section-number">1.3</span> Package scope</a></li>
+</ul></li>
+<li><a href="#installation" id="toc-installation"><span class="toc-section-number">2</span> Installation</a></li>
+<li><a href="#the-hier_info-matrix" id="toc-the-hier_info-matrix"><span class="toc-section-number">3</span> The <code>hier_info</code>
+matrix</a></li>
+<li><a href="#example-data" id="toc-example-data"><span class="toc-section-number">4</span> Example data</a></li>
+<li><a href="#fitting-the-model" id="toc-fitting-the-model"><span class="toc-section-number">5</span> Fitting the model</a>
+<ul>
+<li><a href="#hiernest-fit-at-a-single-penalty-level" id="toc-hiernest-fit-at-a-single-penalty-level"><span class="toc-section-number">5.1</span> <code>hierNest()</code> — fit at a
+single penalty level</a></li>
+<li><a href="#cv.hiernest-cross-validated-tuning-parameter-selection" id="toc-cv.hiernest-cross-validated-tuning-parameter-selection"><span class="toc-section-number">5.2</span> <code>cv.hierNest()</code> —
+cross-validated tuning parameter selection</a>
+<ul>
+<li><a href="#cross-validation-methods" id="toc-cross-validation-methods"><span class="toc-section-number">5.2.1</span> Cross-validation
+methods</a></li>
+<li><a href="#recommended-grid-search" id="toc-recommended-grid-search"><span class="toc-section-number">5.2.2</span> Recommended: grid
+search</a></li>
+<li><a href="#single-hyperparameter-pair-fast" id="toc-single-hyperparameter-pair-fast"><span class="toc-section-number">5.2.3</span> Single hyperparameter pair
+(fast)</a></li>
+<li><a href="#user-supplied-grid" id="toc-user-supplied-grid"><span class="toc-section-number">5.2.4</span> User-supplied grid</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#inspecting-the-cross-validated-fit" id="toc-inspecting-the-cross-validated-fit"><span class="toc-section-number">6</span> Inspecting the cross-validated
+fit</a></li>
+<li><a href="#visualizing-the-estimated-effects" id="toc-visualizing-the-estimated-effects"><span class="toc-section-number">7</span> Visualizing the estimated
+effects</a>
+<ul>
+<li><a href="#coefficient-heatmap" id="toc-coefficient-heatmap"><span class="toc-section-number">7.1</span> Coefficient heatmap</a></li>
+<li><a href="#subgroup-effect-heatmap" id="toc-subgroup-effect-heatmap"><span class="toc-section-number">7.2</span> Subgroup effect heatmap</a></li>
+</ul></li>
+<li><a href="#extracting-coefficients" id="toc-extracting-coefficients"><span class="toc-section-number">8</span> Extracting coefficients</a></li>
+<li><a href="#methodological-background" id="toc-methodological-background"><span class="toc-section-number">9</span> Methodological background</a>
+<ul>
+<li><a href="#hierarchical-reparameterization" id="toc-hierarchical-reparameterization"><span class="toc-section-number">9.1</span> Hierarchical
+reparameterization</a></li>
+<li><a href="#overlapping-group-lasso-penalty" id="toc-overlapping-group-lasso-penalty"><span class="toc-section-number">9.2</span> Overlapping group lasso
+penalty</a></li>
+<li><a href="#computation" id="toc-computation"><span class="toc-section-number">9.3</span> Computation</a></li>
+</ul></li>
+<li><a href="#session-information" id="toc-session-information"><span class="toc-section-number">10</span> Session information</a></li>
+</ul>
+</div>
+
+<div id="introduction" class="section level1" number="1">
+<h1><span class="header-section-number">1</span> Introduction</h1>
+<p>The <strong>hierNest</strong> package implements penalized regression
+with a hierarchical nested parameterization designed for settings in
+which observations belong to a two-level group hierarchy — for example,
+Diagnosis Related Groups (DRGs) nested within Major Diagnostic
+Categories (MDCs) in electronic health record (EHR) data.</p>
+<div id="motivation" class="section level2" number="1.1">
+<h2><span class="header-section-number">1.1</span> Motivation</h2>
+<p>In health systems, patient populations are highly heterogeneous. A
+patient hospitalized for heart failure has very different clinical risk
+factors from one admitted for a traumatic injury. Fitting a single
+pooled model ignores this heterogeneity, while fitting fully separate
+models per DRG is statistically infeasible when subgroup sample sizes
+are small and the number of predictors is large.</p>
+<p><strong>hierNest</strong> resolves this tension by decomposing each
+covariate’s effect into three interpretable, hierarchically nested
+components:</p>
+<p><span class="math display">\[\beta_d = \mu + \eta^{M(d)} +
+\delta_d\]</span></p>
+<p>where:</p>
+<ul>
+<li><span class="math inline">\(\mu\)</span> is the <strong>overall
+common effect</strong> shared across all subgroups,</li>
+<li><span class="math inline">\(\eta^{M(d)}\)</span> is the
+<strong>MDC-specific deviation</strong> for the Major Diagnostic
+Category <span class="math inline">\(M(d)\)</span> that DRG <span class="math inline">\(d\)</span> belongs to,</li>
+<li><span class="math inline">\(\delta_d\)</span> is the
+<strong>DRG-specific deviation</strong> unique to subgroup <span class="math inline">\(d\)</span>.</li>
+</ul>
+<p>Pairing this reparameterization with structured regularization (lasso
+or overlapping group lasso) allows the model to borrow strength across
+related subgroups while remaining flexible enough to capture genuine
+heterogeneity.</p>
+</div>
+<div id="two-penalization-strategies" class="section level2" number="1.2">
+<h2><span class="header-section-number">1.2</span> Two penalization
+strategies</h2>
+<p>The package provides two penalization methods:</p>
+<ol style="list-style-type: decimal">
+<li><p><strong>hierNest-Lasso</strong> — applies a standard lasso
+penalty to the reparameterized coefficients, with penalty weights
+adjusted for subgroup sample size. This is implemented via a modified
+design matrix that can be passed directly to <code>glmnet</code>. It is
+fast and serves as a useful baseline.</p></li>
+<li><p><strong>hierNest-OGLasso</strong> — applies an overlapping group
+lasso penalty that additionally enforces <em>effect hierarchy</em>: an
+MDC-specific effect can be non-zero only if the corresponding overall
+effect is non-zero, and a DRG-specific effect can be non-zero only if
+the corresponding MDC effect is non-zero. This is the recommended method
+when the hierarchical structure is plausible.</p></li>
+</ol>
+</div>
+<div id="package-scope" class="section level2" number="1.3">
+<h2><span class="header-section-number">1.3</span> Package scope</h2>
+<p>This vignette covers:</p>
+<ul>
+<li>The structure of the required <code>hier_info</code> input.</li>
+<li>Simulating or loading data suitable for <code>hierNest</code>.</li>
+<li>Fitting a model with <code>hierNest()</code> at a fixed
+penalty.</li>
+<li>Selecting tuning parameters with <code>cv.hierNest()</code>.</li>
+<li>Extracting and interpreting coefficients.</li>
+<li>Generating predictions on new data with
+<code>predict_hierNest()</code>.</li>
+<li>Visualizing results with <code>plot()</code>.</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="installation" class="section level1" number="2">
+<h1><span class="header-section-number">2</span> Installation</h1>
+<p>Install the package from CRAN (when available) or from source:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># From CRAN</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;hierNest&quot;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co"># From source (development version)</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="co"># install.packages(&quot;devtools&quot;)</span></span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a>devtools<span class="sc">::</span><span class="fu">install_github</span>(<span class="st">&quot;ZirenJiang/hierNest&quot;</span>)</span></code></pre></div>
+<p>Load the package:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="fu">library</span>(hierNest)</span></code></pre></div>
+<hr />
+</div>
+<div id="the-hier_info-matrix" class="section level1" number="3">
+<h1><span class="header-section-number">3</span> The
+<code>hier_info</code> matrix</h1>
+<p>All <code>hierNest</code> functions require a <code>hier_info</code>
+argument that encodes the two-level hierarchy. This is an <span class="math inline">\(n \times 2\)</span> integer matrix where:</p>
+<ul>
+<li>Column 1 gives the <strong>group index</strong> (e.g., MDC) for each
+observation, taking values in <span class="math inline">\(\{1, \ldots,
+n_{\text{MDC}}\}\)</span>.</li>
+<li>Column 2 gives the <strong>subgroup index</strong> (e.g., DRG) for
+each observation, taking values in <span class="math inline">\(\{1,
+\ldots, n_{\text{DRG}}\}\)</span>.</li>
+</ul>
+<p>Subgroup indices must be <em>globally unique</em> across groups — two
+DRGs in different MDCs must have different integer codes.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Illustration: 3 MDCs with 2 DRGs each (6 DRGs total)</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a><span class="co"># MDC 1 -&gt; DRG 1, DRG 2</span></span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a><span class="co"># MDC 2 -&gt; DRG 3, DRG 4</span></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a><span class="co"># MDC 3 -&gt; DRG 5, DRG 6</span></span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a><span class="co">#</span></span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a><span class="co"># For an observation in MDC 2 / DRG 4:</span></span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a><span class="co">#   hier_info[i, ] = c(2, 4)</span></span></code></pre></div>
+<hr />
+</div>
+<div id="example-data" class="section level1" number="4">
+<h1><span class="header-section-number">4</span> Example data</h1>
+<p>The package ships with a built-in example dataset that illustrates
+the required data structure.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">data</span>(<span class="st">&quot;example_data&quot;</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="co"># Dimensions</span></span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;X dimensions:&quot;</span>, <span class="fu">dim</span>(example_data<span class="sc">$</span>X), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="co">#&gt; X dimensions: 200 30</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Y length:     &quot;</span>, <span class="fu">length</span>(example_data<span class="sc">$</span>Y), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="co">#&gt; Y length:      200</span></span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;hier_info dimensions:&quot;</span>, <span class="fu">dim</span>(example_data<span class="sc">$</span>hier_info), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="co">#&gt; hier_info dimensions: 200 2</span></span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="co"># Peek at hier_info</span></span>
+<span id="cb4-12"><a href="#cb4-12" tabindex="-1"></a><span class="fu">head</span>(example_data<span class="sc">$</span>hier_info)</span>
+<span id="cb4-13"><a href="#cb4-13" tabindex="-1"></a><span class="co">#&gt;      [,1] [,2]</span></span>
+<span id="cb4-14"><a href="#cb4-14" tabindex="-1"></a><span class="co">#&gt; [1,]    1    1</span></span>
+<span id="cb4-15"><a href="#cb4-15" tabindex="-1"></a><span class="co">#&gt; [2,]    1    1</span></span>
+<span id="cb4-16"><a href="#cb4-16" tabindex="-1"></a><span class="co">#&gt; [3,]    1    1</span></span>
+<span id="cb4-17"><a href="#cb4-17" tabindex="-1"></a><span class="co">#&gt; [4,]    1    1</span></span>
+<span id="cb4-18"><a href="#cb4-18" tabindex="-1"></a><span class="co">#&gt; [5,]    1    1</span></span>
+<span id="cb4-19"><a href="#cb4-19" tabindex="-1"></a><span class="co">#&gt; [6,]    1    1</span></span>
+<span id="cb4-20"><a href="#cb4-20" tabindex="-1"></a></span>
+<span id="cb4-21"><a href="#cb4-21" tabindex="-1"></a><span class="co"># Group sizes</span></span>
+<span id="cb4-22"><a href="#cb4-22" tabindex="-1"></a>table_mdc <span class="ot">&lt;-</span> <span class="fu">table</span>(example_data<span class="sc">$</span>hier_info[, <span class="dv">1</span>])</span>
+<span id="cb4-23"><a href="#cb4-23" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Observations per MDC group:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-25"><a href="#cb4-25" tabindex="-1"></a><span class="co">#&gt; Observations per MDC group:</span></span>
+<span id="cb4-26"><a href="#cb4-26" tabindex="-1"></a><span class="fu">print</span>(table_mdc)</span>
+<span id="cb4-27"><a href="#cb4-27" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-28"><a href="#cb4-28" tabindex="-1"></a><span class="co">#&gt;   1   2 </span></span>
+<span id="cb4-29"><a href="#cb4-29" tabindex="-1"></a><span class="co">#&gt; 100 100</span></span>
+<span id="cb4-30"><a href="#cb4-30" tabindex="-1"></a></span>
+<span id="cb4-31"><a href="#cb4-31" tabindex="-1"></a>table_drg <span class="ot">&lt;-</span> <span class="fu">table</span>(example_data<span class="sc">$</span>hier_info[, <span class="dv">2</span>])</span>
+<span id="cb4-32"><a href="#cb4-32" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Observations per DRG subgroup (first 10):</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-33"><a href="#cb4-33" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-34"><a href="#cb4-34" tabindex="-1"></a><span class="co">#&gt; Observations per DRG subgroup (first 10):</span></span>
+<span id="cb4-35"><a href="#cb4-35" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">head</span>(table_drg, <span class="dv">10</span>))</span>
+<span id="cb4-36"><a href="#cb4-36" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-37"><a href="#cb4-37" tabindex="-1"></a><span class="co">#&gt;  1  2  3  4 </span></span>
+<span id="cb4-38"><a href="#cb4-38" tabindex="-1"></a><span class="co">#&gt; 50 50 50 50</span></span>
+<span id="cb4-39"><a href="#cb4-39" tabindex="-1"></a></span>
+<span id="cb4-40"><a href="#cb4-40" tabindex="-1"></a><span class="co"># Outcome distribution (binary)</span></span>
+<span id="cb4-41"><a href="#cb4-41" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">Outcome distribution:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb4-42"><a href="#cb4-42" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-43"><a href="#cb4-43" tabindex="-1"></a><span class="co">#&gt; Outcome distribution:</span></span>
+<span id="cb4-44"><a href="#cb4-44" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">table</span>(example_data<span class="sc">$</span>Y))</span>
+<span id="cb4-45"><a href="#cb4-45" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb4-46"><a href="#cb4-46" tabindex="-1"></a><span class="co">#&gt;   0   1 </span></span>
+<span id="cb4-47"><a href="#cb4-47" tabindex="-1"></a><span class="co">#&gt; 108  92</span></span></code></pre></div>
+<hr />
+</div>
+<div id="fitting-the-model" class="section level1" number="5">
+<h1><span class="header-section-number">5</span> Fitting the model</h1>
+<div id="hiernest-fit-at-a-single-penalty-level" class="section level2" number="5.1">
+<h2><span class="header-section-number">5.1</span>
+<code>hierNest()</code> — fit at a single penalty level</h2>
+<p><code>hierNest()</code> fits the full regularization path for a
+single pair of hyperparameters <span class="math inline">\((\alpha_1,
+\alpha_2)\)</span>. It is useful for exploration or when tuning
+parameters have already been selected.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="fu">library</span>(hierNest)</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">hierNest</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>  <span class="at">x         =</span> example_data<span class="sc">$</span>X,</span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>  <span class="at">y         =</span> example_data<span class="sc">$</span>Y,</span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a>  <span class="at">hier_info =</span> example_data<span class="sc">$</span>hier_info,</span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a>  <span class="at">family    =</span> <span class="st">&quot;binomial&quot;</span>,</span>
+<span id="cb5-7"><a href="#cb5-7" tabindex="-1"></a>  <span class="at">asparse1  =</span> <span class="dv">1</span>,    <span class="co"># weight for MDC-level group penalty</span></span>
+<span id="cb5-8"><a href="#cb5-8" tabindex="-1"></a>  <span class="at">asparse2  =</span> <span class="dv">1</span>     <span class="co"># weight for DRG-level subgroup penalty</span></span>
+<span id="cb5-9"><a href="#cb5-9" tabindex="-1"></a>)</span>
+<span id="cb5-10"><a href="#cb5-10" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" tabindex="-1"></a><span class="co"># The fit contains a lambda sequence and corresponding coefficient paths</span></span>
+<span id="cb5-12"><a href="#cb5-12" tabindex="-1"></a><span class="fu">length</span>(fit<span class="sc">$</span>lambda)</span>
+<span id="cb5-13"><a href="#cb5-13" tabindex="-1"></a><span class="fu">dim</span>(fit<span class="sc">$</span>beta)   <span class="co"># rows = reparameterized coefficients, cols = lambda values</span></span></code></pre></div>
+<p>Key arguments:</p>
+<table>
+<colgroup>
+<col width="50%" />
+<col width="50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Argument</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>x</code></td>
+<td><span class="math inline">\(n \times p\)</span> predictor
+matrix</td>
+</tr>
+<tr class="even">
+<td><code>y</code></td>
+<td>Response (numeric for Gaussian, 0/1 or factor for binomial)</td>
+</tr>
+<tr class="odd">
+<td><code>hier_info</code></td>
+<td><span class="math inline">\(n \times 2\)</span> group/subgroup index
+matrix</td>
+</tr>
+<tr class="even">
+<td><code>family</code></td>
+<td><code>&quot;gaussian&quot;</code> or <code>&quot;binomial&quot;</code></td>
+</tr>
+<tr class="odd">
+<td><code>asparse1</code></td>
+<td><span class="math inline">\(\alpha_1\)</span>: relative weight for
+the MDC-level overlapping group penalty</td>
+</tr>
+<tr class="even">
+<td><code>asparse2</code></td>
+<td><span class="math inline">\(\alpha_2\)</span>: relative weight for
+the DRG-level overlapping group penalty</td>
+</tr>
+<tr class="odd">
+<td><code>nlambda</code></td>
+<td>Length of the <span class="math inline">\(\lambda\)</span> sequence
+(default 100)</td>
+</tr>
+<tr class="even">
+<td><code>standardize</code></td>
+<td>Whether to standardize predictors before fitting (default
+<code>TRUE</code>)</td>
+</tr>
+<tr class="odd">
+<td><code>method</code></td>
+<td>For now, only <code>&quot;overlapping&quot;</code> (hierNest-OGLasso,
+default)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+<div id="cv.hiernest-cross-validated-tuning-parameter-selection" class="section level2" number="5.2">
+<h2><span class="header-section-number">5.2</span>
+<code>cv.hierNest()</code> — cross-validated tuning parameter
+selection</h2>
+<p>In practice, the penalty hyperparameters <span class="math inline">\(\lambda\)</span>, <span class="math inline">\(\alpha_1\)</span>, and <span class="math inline">\(\alpha_2\)</span> need to be chosen by
+cross-validation. <code>cv.hierNest()</code> wraps the fitting procedure
+with cross-validation and returns the optimal parameter combination.</p>
+<div id="cross-validation-methods" class="section level3" number="5.2.1">
+<h3><span class="header-section-number">5.2.1</span> Cross-validation
+methods</h3>
+<p>The <code>cvmethod</code> argument controls how <span class="math inline">\(\alpha_1\)</span> and <span class="math inline">\(\alpha_2\)</span> are selected:</p>
+<ul>
+<li><code>&quot;general&quot;</code> — uses a single pair of <span class="math inline">\(\alpha_1\)</span> and <span class="math inline">\(\alpha_2\)</span> (supplied as scalars) and runs
+standard cross-validation over the <span class="math inline">\(\lambda\)</span> sequence only.</li>
+<li><code>&quot;grid_search&quot;</code> — searches a grid of <span class="math inline">\(\alpha_1 \times \alpha_2\)</span> pairs. The
+ranges are specified via <code>asparse1</code> and <code>asparse2</code>
+(each a length-2 vector giving the lower and upper bound), with
+<code>asparse1_num</code> and <code>asparse2_num</code> controlling the
+grid resolution.</li>
+<li><code>&quot;user_supply&quot;</code> — the user provides explicit paired
+vectors of <span class="math inline">\((\alpha_1, \alpha_2)\)</span>
+values to evaluate.</li>
+</ul>
+</div>
+<div id="recommended-grid-search" class="section level3" number="5.2.2">
+<h3><span class="header-section-number">5.2.2</span> Recommended: grid
+search</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>cv.fit <span class="ot">&lt;-</span> <span class="fu">cv.hierNest</span>(</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="at">x           =</span> example_data<span class="sc">$</span>X,</span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a>  <span class="at">y           =</span> example_data<span class="sc">$</span>Y,</span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a>  <span class="at">method      =</span> <span class="st">&quot;overlapping&quot;</span>,</span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a>  <span class="at">hier_info   =</span> example_data<span class="sc">$</span>hier_info,</span>
+<span id="cb6-6"><a href="#cb6-6" tabindex="-1"></a>  <span class="at">family      =</span> <span class="st">&quot;binomial&quot;</span>,</span>
+<span id="cb6-7"><a href="#cb6-7" tabindex="-1"></a>  <span class="at">partition   =</span> <span class="st">&quot;subgroup&quot;</span>,    <span class="co"># stratify CV folds within subgroups</span></span>
+<span id="cb6-8"><a href="#cb6-8" tabindex="-1"></a>  <span class="at">cvmethod    =</span> <span class="st">&quot;grid_search&quot;</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" tabindex="-1"></a>  <span class="at">asparse1    =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="dv">20</span>),    <span class="co"># search alpha_1 over [0.5, 20]</span></span>
+<span id="cb6-10"><a href="#cb6-10" tabindex="-1"></a>  <span class="at">asparse2    =</span> <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.20</span>), <span class="co"># search alpha_2 over [0.05, 0.20]</span></span>
+<span id="cb6-11"><a href="#cb6-11" tabindex="-1"></a>  <span class="at">asparse1_num =</span> <span class="dv">3</span>,            <span class="co"># 3 x 3 = 9 grid points</span></span>
+<span id="cb6-12"><a href="#cb6-12" tabindex="-1"></a>  <span class="at">asparse2_num =</span> <span class="dv">3</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" tabindex="-1"></a>  <span class="at">nlambda     =</span> <span class="dv">50</span>,            <span class="co"># lambda values per grid point</span></span>
+<span id="cb6-14"><a href="#cb6-14" tabindex="-1"></a>  <span class="at">pred.loss   =</span> <span class="st">&quot;ROC&quot;</span>          <span class="co"># maximize AUROC</span></span>
+<span id="cb6-15"><a href="#cb6-15" tabindex="-1"></a>)</span></code></pre></div>
+<blockquote>
+<p><strong>Note on <code>partition = &quot;subgroup&quot;</code>:</strong> This
+stratifies the cross-validation folds so that each fold contains
+observations from all DRG subgroups (to the extent possible). This
+avoids degenerate folds where a small subgroup is entirely absent from
+the training data.</p>
+</blockquote>
+</div>
+<div id="single-hyperparameter-pair-fast" class="section level3" number="5.2.3">
+<h3><span class="header-section-number">5.2.3</span> Single
+hyperparameter pair (fast)</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>cv.fit.simple <span class="ot">&lt;-</span> <span class="fu">cv.hierNest</span>(</span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>  <span class="at">x         =</span> example_data<span class="sc">$</span>X,</span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>  <span class="at">y         =</span> example_data<span class="sc">$</span>Y,</span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>  <span class="at">method    =</span> <span class="st">&quot;overlapping&quot;</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>  <span class="at">hier_info =</span> example_data<span class="sc">$</span>hier_info,</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a>  <span class="at">family    =</span> <span class="st">&quot;binomial&quot;</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>  <span class="at">partition =</span> <span class="st">&quot;subgroup&quot;</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a>  <span class="at">cvmethod  =</span> <span class="st">&quot;general&quot;</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a>  <span class="at">asparse1  =</span> <span class="dv">1</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" tabindex="-1"></a>  <span class="at">asparse2  =</span> <span class="fl">0.1</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" tabindex="-1"></a>  <span class="at">nlambda   =</span> <span class="dv">100</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" tabindex="-1"></a>  <span class="at">pred.loss =</span> <span class="st">&quot;ROC&quot;</span></span>
+<span id="cb7-13"><a href="#cb7-13" tabindex="-1"></a>)</span></code></pre></div>
+</div>
+<div id="user-supplied-grid" class="section level3" number="5.2.4">
+<h3><span class="header-section-number">5.2.4</span> User-supplied
+grid</h3>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a>cv.fit.user <span class="ot">&lt;-</span> <span class="fu">cv.hierNest</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a>  <span class="at">x         =</span> example_data<span class="sc">$</span>X,</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  <span class="at">y         =</span> example_data<span class="sc">$</span>Y,</span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="at">method    =</span> <span class="st">&quot;overlapping&quot;</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  <span class="at">hier_info =</span> example_data<span class="sc">$</span>hier_info,</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  <span class="at">family    =</span> <span class="st">&quot;binomial&quot;</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>  <span class="at">partition =</span> <span class="st">&quot;subgroup&quot;</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>  <span class="at">cvmethod  =</span> <span class="st">&quot;user_supply&quot;</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>  <span class="at">asparse1  =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">5</span>, <span class="dv">10</span>),   <span class="co"># explicit (alpha1, alpha2) pairs</span></span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>  <span class="at">asparse2  =</span> <span class="fu">c</span>(<span class="fl">0.05</span>, <span class="fl">0.1</span>, <span class="fl">0.1</span>, <span class="fl">0.2</span>),</span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>  <span class="at">nlambda   =</span> <span class="dv">50</span></span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>)</span></code></pre></div>
+<hr />
+</div>
+</div>
+</div>
+<div id="inspecting-the-cross-validated-fit" class="section level1" number="6">
+<h1><span class="header-section-number">6</span> Inspecting the
+cross-validated fit</h1>
+<p>After running <code>cv.hierNest()</code>, several components of the
+returned object are of interest.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="co"># Optimal tuning parameters selected by cross-validation</span></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a>cv.fit<span class="sc">$</span>lambda.min   <span class="co"># lambda minimising CV loss</span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>cv.fit<span class="sc">$</span>min_alpha1   <span class="co"># alpha_1 selected</span></span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>cv.fit<span class="sc">$</span>min_alpha2   <span class="co"># alpha_2 selected</span></span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a><span class="co"># Number of non-zero coefficients in the reparameterized model</span></span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a><span class="co"># at the optimal lambda</span></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a>nnz <span class="ot">&lt;-</span> <span class="fu">sum</span>(cv.fit<span class="sc">$</span>hierNest.fit<span class="sc">$</span>beta[,</span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>           <span class="fu">which</span>(cv.fit<span class="sc">$</span>hierNest.fit<span class="sc">$</span>lambda <span class="sc">==</span> cv.fit<span class="sc">$</span>lambda.min)] <span class="sc">!=</span> <span class="dv">0</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Non-zero reparameterized coefficients:&quot;</span>, nnz, <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span></code></pre></div>
+<hr />
+</div>
+<div id="visualizing-the-estimated-effects" class="section level1" number="7">
+<h1><span class="header-section-number">7</span> Visualizing the
+estimated effects</h1>
+<p>The <code>plot()</code> method for <code>cv.hierNest</code> objects
+provides two heatmap visualizations.</p>
+<div id="coefficient-heatmap" class="section level2" number="7.1">
+<h2><span class="header-section-number">7.1</span> Coefficient
+heatmap</h2>
+<p>Plotting with <code>type = &quot;coefficients&quot;</code> shows the estimated
+overall, MDC-specific, and DRG-specific components for each selected
+predictor, at the cross-validation optimal <span class="math inline">\(\lambda\)</span>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># Returns a plotly interactive heatmap</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>p_coef <span class="ot">&lt;-</span> <span class="fu">plot</span>(cv.fit, <span class="at">type =</span> <span class="st">&quot;coefficients&quot;</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>p_coef</span></code></pre></div>
+<p>Each row of the heatmap corresponds to one level in the hierarchy
+(overall mean, then each MDC, then each DRG within that MDC). Each
+column is a selected predictor. Blue cells indicate a positive
+contribution; red cells indicate negative. Rows with all zeros are
+suppressed.</p>
+</div>
+<div id="subgroup-effect-heatmap" class="section level2" number="7.2">
+<h2><span class="header-section-number">7.2</span> Subgroup effect
+heatmap</h2>
+<p>Plotting with <code>type = &quot;Subgroup effects&quot;</code> reconstructs the
+<em>total</em> effect for each DRG subgroup: <span class="math inline">\(\hat{\beta}_d = \hat{\mu} + \hat{\eta}^{M(d)} +
+\hat{\delta}_d\)</span>.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>p_sub <span class="ot">&lt;-</span> <span class="fu">plot</span>(cv.fit, <span class="at">type =</span> <span class="st">&quot;Subgroup effects&quot;</span>)</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>p_sub</span></code></pre></div>
+<p>This visualization is useful for comparing risk profiles across
+subgroups — subgroups with similar colors for a given predictor share
+similar risk processes for that covariate.</p>
+<hr />
+</div>
+</div>
+<div id="extracting-coefficients" class="section level1" number="8">
+<h1><span class="header-section-number">8</span> Extracting
+coefficients</h1>
+<p>To work directly with the estimated coefficients, you can index into
+the fitted model stored in <code>cv.fit$hierNest.fit</code>.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>hier_info <span class="ot">&lt;-</span> example_data<span class="sc">$</span>hier_info</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="co"># Indices of coefficient rows in the reparameterized model</span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>n_mdc_fit <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(hier_info[, <span class="dv">1</span>]))</span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>n_drg_fit <span class="ot">&lt;-</span> <span class="fu">length</span>(<span class="fu">unique</span>(hier_info[, <span class="dv">2</span>]))</span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>n_row     <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">+</span> n_mdc_fit <span class="sc">+</span> n_drg_fit  <span class="co"># overall + MDC + DRG rows</span></span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a><span class="co"># Extract coefficient matrix at optimal lambda</span></span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a>lambda_opt <span class="ot">&lt;-</span> cv.fit<span class="sc">$</span>lambda.min</span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>lambda_idx <span class="ot">&lt;-</span> <span class="fu">which</span>(cv.fit<span class="sc">$</span>hierNest.fit<span class="sc">$</span>lambda <span class="sc">==</span> lambda_opt)</span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>beta_mat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(</span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a>  cv.fit<span class="sc">$</span>hierNest.fit<span class="sc">$</span>beta[, lambda_idx],</span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a>  <span class="at">nrow =</span> n_row</span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a>)</span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a></span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="co"># Assign interpretable row names</span></span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a><span class="fu">rownames</span>(beta_mat) <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a>  <span class="st">&quot;Overall&quot;</span>,</span>
+<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a>  <span class="fu">paste0</span>(<span class="st">&quot;MDC_&quot;</span>, <span class="fu">unique</span>(hier_info[, <span class="dv">1</span>])),</span>
+<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a>  <span class="fu">paste0</span>(<span class="st">&quot;DRG_&quot;</span>, <span class="fu">unique</span>(hier_info[, <span class="dv">2</span>]))</span>
+<span id="cb12-22"><a href="#cb12-22" tabindex="-1"></a>)</span>
+<span id="cb12-23"><a href="#cb12-23" tabindex="-1"></a></span>
+<span id="cb12-24"><a href="#cb12-24" tabindex="-1"></a><span class="co"># Assign column names (intercept + predictors)</span></span>
+<span id="cb12-25"><a href="#cb12-25" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">is.null</span>(<span class="fu">colnames</span>(example_data<span class="sc">$</span>X))) {</span>
+<span id="cb12-26"><a href="#cb12-26" tabindex="-1"></a>  <span class="fu">colnames</span>(beta_mat) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Intercept&quot;</span>, <span class="fu">colnames</span>(example_data<span class="sc">$</span>X))</span>
+<span id="cb12-27"><a href="#cb12-27" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb12-28"><a href="#cb12-28" tabindex="-1"></a>  <span class="fu">colnames</span>(beta_mat) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;Intercept&quot;</span>, <span class="fu">paste0</span>(<span class="st">&quot;X&quot;</span>, <span class="fu">seq_len</span>(<span class="fu">ncol</span>(example_data<span class="sc">$</span>X))))</span>
+<span id="cb12-29"><a href="#cb12-29" tabindex="-1"></a>}</span>
+<span id="cb12-30"><a href="#cb12-30" tabindex="-1"></a></span>
+<span id="cb12-31"><a href="#cb12-31" tabindex="-1"></a><span class="co"># View predictors with non-zero overall effect</span></span>
+<span id="cb12-32"><a href="#cb12-32" tabindex="-1"></a>overall_nonzero <span class="ot">&lt;-</span> <span class="fu">which</span>(beta_mat[<span class="st">&quot;Overall&quot;</span>, ] <span class="sc">!=</span> <span class="dv">0</span>)</span>
+<span id="cb12-33"><a href="#cb12-33" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Predictors with non-zero overall effect:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb12-34"><a href="#cb12-34" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">colnames</span>(beta_mat)[overall_nonzero])</span>
+<span id="cb12-35"><a href="#cb12-35" tabindex="-1"></a></span>
+<span id="cb12-36"><a href="#cb12-36" tabindex="-1"></a><span class="co"># View all non-zero effects for a specific predictor</span></span>
+<span id="cb12-37"><a href="#cb12-37" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">length</span>(overall_nonzero) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb12-38"><a href="#cb12-38" tabindex="-1"></a>  j <span class="ot">&lt;-</span> overall_nonzero[<span class="dv">1</span>]</span>
+<span id="cb12-39"><a href="#cb12-39" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">All effects for predictor&quot;</span>, <span class="fu">colnames</span>(beta_mat)[j], <span class="st">&quot;:</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb12-40"><a href="#cb12-40" tabindex="-1"></a>  <span class="fu">print</span>(beta_mat[beta_mat[, j] <span class="sc">!=</span> <span class="dv">0</span>, j, <span class="at">drop =</span> <span class="cn">FALSE</span>])</span>
+<span id="cb12-41"><a href="#cb12-41" tabindex="-1"></a>}</span></code></pre></div>
+<hr />
+</div>
+<div id="methodological-background" class="section level1" number="9">
+<h1><span class="header-section-number">9</span> Methodological
+background</h1>
+<p>The statistical framework underlying <strong>hierNest</strong> is
+described in detail in:</p>
+<blockquote>
+<p>Jiang, Z., Huo, L., Hou, J., Vaughan-Sarrazin, M., Smith, M. A.,
+&amp; Huling, J. D. (2026+). <em>Heterogeneous readmission prediction
+with hierarchical effect decomposition and regularization</em>.</p>
+</blockquote>
+<div id="hierarchical-reparameterization" class="section level2" number="9.1">
+<h2><span class="header-section-number">9.1</span> Hierarchical
+reparameterization</h2>
+<p>For participant <span class="math inline">\(i\)</span> with DRG <span class="math inline">\(D_i = d\)</span>, the logistic regression model
+is:</p>
+<p><span class="math display">\[\text{logit}(\Pr(Y_i = 1 \mid X_i, D_i =
+d)) = X_i^\top \beta_d\]</span></p>
+<p>The hierNest reparameterization decomposes <span class="math inline">\(\beta_d\)</span> as:</p>
+<p><span class="math display">\[\beta_d = \mu + \eta^{M(d)} +
+\delta_d\]</span></p>
+<p>This is encoded via a modified design matrix <span class="math inline">\(X_H\)</span> constructed as the Khatri–Rao
+(column-wise Kronecker) product of <span class="math inline">\(X\)</span> and the hierarchy indicator matrix
+<span class="math inline">\(H = [\mathbf{1}_n \;;\; H_M \;;\;
+H_D]\)</span>.</p>
+</div>
+<div id="overlapping-group-lasso-penalty" class="section level2" number="9.2">
+<h2><span class="header-section-number">9.2</span> Overlapping group
+lasso penalty</h2>
+<p>The overlapping group lasso penalty on the grouped coefficient vector
+<span class="math inline">\(\theta_j = \{\mu_j, \{\eta_{Mj}\}_{M},
+\{\delta_{dj}\}_d\}\)</span> for the <span class="math inline">\(j\)</span>-th predictor is:</p>
+<p><span class="math display">\[P_{\text{og}}(\theta) = \lambda
+\sum_{j=1}^{p} \left[ |\theta_j|_2 + \sum_{M \in \mathcal{M}}
+\left(\alpha_1 |\theta_{Mj}|_2 + \alpha_2 |\eta_{Mj}| \right)
+\right]\]</span></p>
+<p>This penalty enforces a hierarchical zero pattern: <span class="math inline">\(\mu_j = 0\)</span> implies all <span class="math inline">\(\eta_{Mj} = 0\)</span> and <span class="math inline">\(\delta_{dj} = 0\)</span>; <span class="math inline">\(\eta_{Mj} = 0\)</span> implies all <span class="math inline">\(\delta_{dj} = 0\)</span> for <span class="math inline">\(d \in M\)</span>.</p>
+</div>
+<div id="computation" class="section level2" number="9.3">
+<h2><span class="header-section-number">9.3</span> Computation</h2>
+<p>For <code>method = &quot;overlapping&quot;</code>, the
+majorization-minimization (MM) algorithm described in Algorithm 1 of the
+paper is used, with sequential strong rules to skip inactive predictor
+groups and accelerate computation. The design matrix is stored as a
+sparse matrix to minimise memory requirements.</p>
+<hr />
+</div>
+</div>
+<div id="session-information" class="section level1" number="10">
+<h1><span class="header-section-number">10</span> Session
+information</h1>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a><span class="co">#&gt; R version 4.3.2 (2023-10-31 ucrt)</span></span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a><span class="co">#&gt; Platform: x86_64-w64-mingw32/x64 (64-bit)</span></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a><span class="co">#&gt; Running under: Windows 11 x64 (build 26200)</span></span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a><span class="co">#&gt; Matrix products: default</span></span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a><span class="co">#&gt; locale:</span></span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a><span class="co">#&gt; [1] LC_COLLATE=Chinese (Simplified)_China.utf8 </span></span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a><span class="co">#&gt; [2] LC_CTYPE=Chinese (Simplified)_China.utf8   </span></span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a><span class="co">#&gt; [3] LC_MONETARY=Chinese (Simplified)_China.utf8</span></span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a><span class="co">#&gt; [4] LC_NUMERIC=C                               </span></span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a><span class="co">#&gt; [5] LC_TIME=Chinese (Simplified)_China.utf8    </span></span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a><span class="co">#&gt; time zone: America/Chicago</span></span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a><span class="co">#&gt; tzcode source: internal</span></span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a><span class="co">#&gt; attached base packages:</span></span>
+<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a><span class="co">#&gt; [1] stats     graphics  grDevices utils     datasets  methods   base     </span></span>
+<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a><span class="co">#&gt; other attached packages:</span></span>
+<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a><span class="co">#&gt; [1] hierNest_1.0.3</span></span>
+<span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a><span class="co">#&gt; </span></span>
+<span id="cb13-25"><a href="#cb13-25" tabindex="-1"></a><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
+<span id="cb13-26"><a href="#cb13-26" tabindex="-1"></a><span class="co">#&gt;  [1] Matrix_1.6-5       gtable_0.3.6       jsonlite_1.8.8     dplyr_1.1.4       </span></span>
+<span id="cb13-27"><a href="#cb13-27" tabindex="-1"></a><span class="co">#&gt;  [5] compiler_4.3.2     tidyselect_1.2.1   tidyr_1.3.1        jquerylib_0.1.4   </span></span>
+<span id="cb13-28"><a href="#cb13-28" tabindex="-1"></a><span class="co">#&gt;  [9] scales_1.4.0       yaml_2.3.8         fastmap_1.1.1      lattice_0.22-5    </span></span>
+<span id="cb13-29"><a href="#cb13-29" tabindex="-1"></a><span class="co">#&gt; [13] ggplot2_4.0.0      R6_2.6.1           generics_0.1.4     knitr_1.51        </span></span>
+<span id="cb13-30"><a href="#cb13-30" tabindex="-1"></a><span class="co">#&gt; [17] htmlwidgets_1.6.4  dotCall64_1.1-1    tibble_3.2.1       bslib_0.7.0       </span></span>
+<span id="cb13-31"><a href="#cb13-31" tabindex="-1"></a><span class="co">#&gt; [21] pillar_1.11.1      RColorBrewer_1.1-3 rlang_1.1.6        cachem_1.0.8      </span></span>
+<span id="cb13-32"><a href="#cb13-32" tabindex="-1"></a><span class="co">#&gt; [25] xfun_0.56          sass_0.4.9         S7_0.2.0           lazyeval_0.2.2    </span></span>
+<span id="cb13-33"><a href="#cb13-33" tabindex="-1"></a><span class="co">#&gt; [29] otel_0.2.0         viridisLite_0.4.2  plotly_4.10.4      cli_3.6.2         </span></span>
+<span id="cb13-34"><a href="#cb13-34" tabindex="-1"></a><span class="co">#&gt; [33] magrittr_2.0.3     digest_0.6.34      grid_4.3.2         rstudioapi_0.16.0 </span></span>
+<span id="cb13-35"><a href="#cb13-35" tabindex="-1"></a><span class="co">#&gt; [37] rTensor_1.4.8      lifecycle_1.0.4    vctrs_0.6.5        evaluate_0.23     </span></span>
+<span id="cb13-36"><a href="#cb13-36" tabindex="-1"></a><span class="co">#&gt; [41] glue_1.8.0         data.table_1.17.8  farver_2.1.1       purrr_1.0.2       </span></span>
+<span id="cb13-37"><a href="#cb13-37" tabindex="-1"></a><span class="co">#&gt; [45] rmarkdown_2.30     httr_1.4.7         tools_4.3.2        pkgconfig_2.0.3   </span></span>
+<span id="cb13-38"><a href="#cb13-38" tabindex="-1"></a><span class="co">#&gt; [49] htmltools_0.5.8.1</span></span></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

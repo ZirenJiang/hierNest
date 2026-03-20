@@ -10,6 +10,7 @@ overlapping group lasso penalties are supported to encourage sparsity
 while respecting the nested subgroup structure. Efficient computation is
 achieved through a modified design matrix representation and a custom
 majorization–minimization algorithm for overlapping group penalties.
+\<\<\<\<\<\<\< HEAD
 
 ## See also
 
@@ -18,6 +19,8 @@ Useful links:
 - <https://github.com/ZirenJiang/hierNest>
 
 - Report bugs at <https://github.com/ZirenJiang/hierNest/issues>
+
+======= \>\>\>\>\>\>\> ef8b50176f7fa74098d34d9186851c6068faab68
 
 ## Author
 
