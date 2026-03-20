@@ -2,8 +2,9 @@ template:
   bootstrap: 5
   params:
     bootswatch: cerulean
+  bootswatch: simplex 
 
-url: https://ZirenJiang.github.io/hierNest/
+url: https://zirenjiang.github.io/hierNest/
 
 articles:
   - title: "Vignettes"
