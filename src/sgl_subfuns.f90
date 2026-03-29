@@ -40,7 +40,8 @@ MODULE sgl_subfuns
       INTEGER, INTENT(inout) :: violation
       DOUBLE PRECISION, INTENT(in) :: lama1,lama2,lama3
       DOUBLE PRECISION, DIMENSION (:), ALLOCATABLE :: theta_tilt
-      INTEGER:: startdrg, enddrg, drginx, drgstartinx, drgendinx, theta_tilt_start, theta_tilt_end, theta_drg_norm
+      INTEGER:: startdrg, enddrg, drginx, drgstartinx, drgendinx, theta_tilt_start, theta_tilt_end
+      DOUBLE PRECISION :: theta_drg_norm
       INTEGER:: cn
       INTEGER:: drgix(cn)
       INTEGER:: drgiy(cn)
@@ -201,7 +202,8 @@ MODULE sgl_subfuns
       INTEGER, INTENT(inout) :: violation
       DOUBLE PRECISION, INTENT(in) :: lama1,lama2,lama3
       DOUBLE PRECISION, DIMENSION (:), ALLOCATABLE :: theta_tilt
-      INTEGER:: startdrg, enddrg, drginx, drgstartinx, drgendinx, theta_tilt_start, theta_tilt_end, theta_drg_norm
+      INTEGER:: startdrg, enddrg, drginx, drgstartinx, drgendinx, theta_tilt_start, theta_tilt_end 
+      DOUBLE PRECISION :: theta_drg_norm
       INTEGER:: cn,drginxsub
       INTEGER:: drgix(cn)
       INTEGER:: drgiy(cn)
@@ -382,7 +384,8 @@ MODULE sgl_subfuns
       DOUBLE PRECISION, INTENT(in) :: lama1,lama2,lama3
       
       DOUBLE PRECISION, DIMENSION (:), ALLOCATABLE :: theta_tilt
-      INTEGER:: startdrg, enddrg, drginx, drgstartinx, drgendinx, theta_tilt_start, theta_tilt_end, theta_drg_norm
+      INTEGER:: startdrg, enddrg, drginx, drgstartinx, drgendinx, theta_tilt_start, theta_tilt_end
+      DOUBLE PRECISION :: theta_drg_norm
       INTEGER:: cn,drginxsub
       INTEGER:: drgix(cn)
       INTEGER:: drgiy(cn)

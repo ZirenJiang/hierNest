@@ -10,7 +10,7 @@ Authors@R: c(
     person("Lingfeng", "Huo", role = "aut"),
     person("Daniel J.", "McDonald", role = "ctb"),
     person("Xiaoxuan", "Liang", role = "ctb"),
-    person("Anibal", "Solón Heinsfeld", role = "ctb"),
+    person("Anibal", "Solon Heinsfeld", role = "ctb"),
     person("Aaron", "Cohen", role = "ctb"),
     person("Yi", "Yang", role = "ctb"),
     person("Hui", "Zou", role = "ctb"),
@@ -26,8 +26,8 @@ Authors@R: c(
 Description: Efficient implementation of penalized regression with hierarchical nested parametrization for grouped data. The package provides penalized regression methods that decompose subgroup specific effects into shared global effects, Major subgroup specific effects, and Minor subgroup specific effects, enabling structured borrowing of information across related clinical subgroups. Both lasso and hierarchical overlapping group lasso penalties are supported to encourage sparsity while respecting the nested subgroup structure. Efficient computation is achieved through a modified design matrix representation and a custom majorization minimization algorithm for overlapping group penalties.
 License: GPL (>= 2)
 Depends: R (>= 3.5),
-Imports: cli, dotCall64, ggplot2, magrittr, Matrix, methods, rlang,
-        RSpectra, tidyr, rTensor, pROC, plotly
+Imports: cli, dotCall64, ggplot2, magrittr, Matrix, methods, rlang (>= 1.1.4),
+        RSpectra, tidyr (>= 1.3.0), rTensor, pROC, plotly
 Suggests: dplyr, gglasso, glmnet, knitr, markdown, rmarkdown, splines,
         testthat (>= 3.0.0)
 Config/testthat/edition: 3

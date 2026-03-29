@@ -24,8 +24,8 @@ SUBROUTINE log_sparse_four (bn,bs,ix,iy,gam,nobs,nvars,x,y,pf,pfl1,dfmax,pmax,&
   INTEGER:: drgiy(cn)
 
   DOUBLE PRECISION, DIMENSION (:), ALLOCATABLE :: theta_tilt
-  INTEGER:: startdrg, enddrg, drginx, drgstartinx, drgendinx, theta_tilt_start, theta_tilt_end, theta_drg_norm
-
+  INTEGER:: startdrg, enddrg, drginx, drgstartinx, drgendinx, theta_tilt_start, theta_tilt_end
+  DOUBLE PRECISION :: theta_drg_norm
   
   
   
@@ -337,8 +337,8 @@ SUBROUTINE log_spmat_four (bn,bs,ix,iy,gam,nobs,nvars,x,xidx,xcptr,nnz,y,pf,pfl1
   INTEGER:: drgix(cn)
   INTEGER:: drgiy(cn)
   DOUBLE PRECISION, DIMENSION (:), ALLOCATABLE :: theta_tilt
-  INTEGER:: startdrg, enddrg, drginx, drgstartinx, drgendinx, theta_tilt_start, theta_tilt_end, theta_drg_norm
-
+  INTEGER:: startdrg, enddrg, drginx, drgstartinx, drgendinx, theta_tilt_start, theta_tilt_end
+  DOUBLE PRECISION :: theta_drg_norm
   
   
   
