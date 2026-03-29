@@ -29,7 +29,7 @@ Other contributors:
 \itemize{
   \item Daniel J. McDonald [contributor]
   \item Xiaoxuan Liang [contributor]
-  \item Anibal Solón Heinsfeld [contributor]
+  \item Anibal Solon Heinsfeld [contributor]
   \item Aaron Cohen [contributor]
   \item Yi Yang [contributor]
   \item Hui Zou [contributor]

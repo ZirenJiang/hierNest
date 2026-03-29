@@ -49,13 +49,26 @@ jobs:
         with:
           token: ${{ secrets.RHUB_TOKEN }}
           job-config: ${{ matrix.config.job-config }}
+      # Clear stale cached packages BEFORE setup-deps runs
+      - name: Clear stale cached packages
+        run: |
+          Rscript -e '
+            lib <- "/github/home/R/x86_64-pc-linux-gnu-library/4.6"
+            if (dir.exists(lib)) {
+              installed <- rownames(installed.packages(lib.loc = lib))
+              to_remove <- intersect(c("hierNest", "rlang", "vctrs", "tidyr"), installed)
+              if (length(to_remove) > 0) {
+                message("Removing stale: ", paste(to_remove, collapse = ", "))
+                remove.packages(to_remove, lib = lib)
+              }
+            }
+            install.packages(c("rlang", "vctrs"), type = "source",
+                             repos = "https://cloud.r-project.org")
+          '
       - uses: r-hub/actions/setup-deps@v1
         with:
           token: ${{ secrets.RHUB_TOKEN }}
           job-config: ${{ matrix.config.job-config }}
-      # Force reinstall key deps from source against the live R version
-      - name: Reinstall rlang and vctrs from source
-        run: Rscript -e 'install.packages(c("rlang", "vctrs", "tidyr"), type = "source")'
       - uses: r-hub/actions/run-check@v1
         with:
           token: ${{ secrets.RHUB_TOKEN }}
@@ -79,13 +92,26 @@ jobs:
         with:
           token: ${{ secrets.RHUB_TOKEN }}
           job-config: ${{ matrix.config.job-config }}
+      # Clear stale cached packages BEFORE setup-deps runs
+      - name: Clear stale cached packages
+        run: |
+          Rscript -e '
+            installed <- tryCatch(
+              rownames(installed.packages()),
+              error = function(e) character(0)
+            )
+            to_remove <- intersect(c("hierNest", "rlang", "vctrs", "tidyr"), installed)
+            if (length(to_remove) > 0) {
+              message("Removing stale: ", paste(to_remove, collapse = ", "))
+              remove.packages(to_remove)
+            }
+            install.packages(c("rlang", "vctrs"), type = "source",
+                             repos = "https://cloud.r-project.org")
+          '
       - uses: r-hub/actions/setup-deps@v1
         with:
           job-config: ${{ matrix.config.job-config }}
           token: ${{ secrets.RHUB_TOKEN }}
-      # Force reinstall key deps from source against the live R version
-      - name: Reinstall rlang and vctrs from source
-        run: Rscript -e 'install.packages(c("rlang", "vctrs", "tidyr"), type = "source")'
       - uses: r-hub/actions/run-check@v1
         with:
           job-config: ${{ matrix.config.job-config }}
