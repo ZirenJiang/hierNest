@@ -65,6 +65,7 @@ cv.fit=cv.hierNest(example_data$X,
                    asparse2_num = 3, 
                    nlambda = 50, # length of lambda sequence for each pair of alpha_1 and alpha_2
                    )
+#> [1] "from gglasso fortran code - Convergence for 50th lambda value not reached after maxit=3000000 iterations; solutions for larger lambdas returned"
 ```
 
 # Results
@@ -81,6 +82,21 @@ plot(cv.fit, type = "coefficients")
 
 ![](man/figures/unnamed-chunk-3-1.png)<!-- -->
 
+``` r
+# All subjects — boxplot
+plot_contribution(cv.fit, newx = example_data$X, hier_info = example_data$hier_info, top_n = 15)
+```
+
+<img src="man/figures/README-unnamed-chunk-5-1.png" alt="" width="100%" />
+
+``` r
+
+# Single subject by index — bar chart
+plot_contribution(cv.fit, newx = example_data$X, hier_info = example_data$hier_info, subject_id = 42, top_n = 15)
+```
+
+<img src="man/figures/README-unnamed-chunk-5-2.png" alt="" width="100%" />
+
 By specifying the type = “Subgroup effect”, we plot the covariate
 effects for each subgroup.
 
@@ -94,7 +110,7 @@ plot(cv.fit, type = "Subgroup effects")
 
 ``` r
 cv.fit$lambda.min    # lambda minimizing CV loss
-#> [1] 0.00056551
+#> [1] 0.0009047361
 ```
 
 ``` r

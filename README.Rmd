@@ -85,9 +85,6 @@ plot(cv.fit, type = "coefficients")
 
 
 
-
-
-
 By specifying the type = "Subgroup effect", we plot the covariate effects for each subgroup.
 
 ```{r eval=FALSE}
@@ -117,4 +114,13 @@ cv.fit$min_alpha2    # lambda minimizing CV loss
 ```
 
 
+
+```{r}
+# All subjects — boxplot
+plot_contribution(cv.fit, newx = example_data$X, hier_info = example_data$hier_info, top_n = 15)
+
+# Single subject by index — bar chart
+plot_contribution(cv.fit, newx = example_data$X, hier_info = example_data$hier_info, subject_id = 42, top_n = 15)
+
+```
 
