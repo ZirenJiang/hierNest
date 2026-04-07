@@ -1,17 +1,21 @@
-PKG_FFLAGS = -J. -I.
+PKG_LIBS = $(LAPACK_LIBS) $(BLAS_LIBS) $(FLIBS)
 
 C_OBJS = sparsegl_init.o
-F_OBJS = spmatmul.o sgl_subfuns.o log_sgl_subfuns.o sparsegl.o sparsegllog.o wsgl.o
+F_OBJS = sparsegl.o log_sgl_subfuns.o spmatmul.o sgl_subfuns.o sparsegllog.o wsgl.o
+
+.PHONY: all clean
+
+all: $(SHLIB)
 
 $(SHLIB): $(F_OBJS) $(C_OBJS)
 
-# .o -> .o dependencies only (concrete artifacts, safe in parallel make).
-# .mod files are side-effects of compilation, not real make targets, so we
-# never use them as dependency targets — doing so causes race conditions
-# under parallel make (make -j) as used on CRAN's Fedora GCC server.
-sgl_subfuns.o:     spmatmul.o
-log_sgl_subfuns.o: spmatmul.o
-sparsegl.o:        spmatmul.o sgl_subfuns.o
-sparsegllog.o:     spmatmul.o sgl_subfuns.o log_sgl_subfuns.o
-wsgl.o:            spmatmul.o sgl_subfuns.o
-sparsegl_init.o:   spmatmul.o sgl_subfuns.o log_sgl_subfuns.o sparsegl.o sparsegllog.o wsgl.o
+spmatmul.o: spmatmul.f90
+sgl_subfuns.o log_sgl_subfuns.o: spmatmul.o
+sparsegl.o: sgl_subfuns.o spmatmul.o
+sparsegllog.o: log_sgl_subfuns.o sgl_subfuns.o spmatmul.o
+wsgl.o: sgl_subfuns.o spmatmul.o
+sparsegl_init.o: sparsegl.o sparsegllog.o spmatmul.o sgl_subfuns.o\
+								 log_sgl_subfuns.o wsgl.o
+
+clean:
+	@rm -rf *.mod *.o

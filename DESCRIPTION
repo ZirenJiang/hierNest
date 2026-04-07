@@ -1,7 +1,7 @@
 Type: Package
 Package: hierNest
 Title: Penalized Regression with Hierarchical Nested Parameterization Structure
-Version: 1.0.1
+Version: 1.0.2
 Date: 2026-03-02
 Authors@R: c(
     person("Ziren", "Jiang",,"jian0746@umn.edu", role = c("aut","cre")),
