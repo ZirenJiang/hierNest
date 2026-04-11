@@ -1,15 +1,6 @@
-
 # hierNest
 
-The `hierNest` package allows for the fitting of penalized GLMs with
-covariate effects that vary by discrete and hierarchically-organized
-groups. The methodology allows for the shrinkage of group-specific
-models to a global model or to higher level groups. For example, if
-groups are defined based on primary diagnoses and then diagnoses are
-organized into body systems, `hierNest` will allow models to vary for
-each diagnosis or could be collapsed via penalization to body-system
-specific models or fully to a global model in common for all groups, all
-on a variable-by-variable basis.
+The `hierNest` package allows for the fitting of penalized GLMs with covariate effects that vary by discrete and hierarchically-organized groups. The methodology allows for the shrinkage of group-specific models to a global model or to higher level groups. For example, if groups are defined based on primary diagnoses and then diagnoses are organized into body systems, `hierNest` will allow models to vary for each diagnosis or could be collapsed via penalization to body-system specific models or fully to a global model in common for all groups, all on a variable-by-variable basis.
 
 ## Example
 
@@ -30,10 +21,7 @@ str(example_data)
 #>  $ hier_info: num [1:200, 1:2] 1 1 1 1 1 1 1 1 1 1 ...
 ```
 
-The data structure `hier_info` contains hierarchical information about
-group membership. The last column represents the finest description of
-group membership (eg primary diagnosis) and the first column represents
-the coarsest definition of group (eg body system).
+The data structure `hier_info` contains hierarchical information about group membership. The last column represents the finest description of group membership (eg primary diagnosis) and the first column represents the coarsest definition of group (eg body system).
 
 ``` r
 head(example_data$hier_info)
@@ -48,8 +36,7 @@ head(example_data$hier_info)
 
 # Fit models and select tuning parameters via cross-validation
 
-The `cv.hierNest()` function both fits models and selects tuning
-parameters via $K$-fold cross validation.
+The `cv.hierNest()` function both fits models and selects tuning parameters via $K$-fold cross validation.
 
 ``` r
 cv.fit=cv.hierNest(example_data$X,
@@ -72,9 +59,7 @@ cv.fit=cv.hierNest(example_data$X,
 
 ## Plot the coefficients
 
-By specifying the type = “coefficients”, we plot all non-zero
-coefficient including the overall mean, group-specific, and subgroup
-specific.
+By specifying the type = "coefficients", we plot all non-zero coefficient including the overall mean, group-specific, and subgroup specific.
 
 ``` r
 plot(cv.fit, type = "coefficients")
@@ -87,7 +72,7 @@ plot(cv.fit, type = "coefficients")
 plot_contribution(cv.fit, newx = example_data$X, hier_info = example_data$hier_info, top_n = 15)
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-1.png" alt="" width="100%" />
+<img src="man/figures/README-unnamed-chunk-5-1.png" width="100%"/>
 
 ``` r
 
@@ -95,10 +80,9 @@ plot_contribution(cv.fit, newx = example_data$X, hier_info = example_data$hier_i
 plot_contribution(cv.fit, newx = example_data$X, hier_info = example_data$hier_info, subject_id = 42, top_n = 15)
 ```
 
-<img src="man/figures/README-unnamed-chunk-5-2.png" alt="" width="100%" />
+<img src="man/figures/README-unnamed-chunk-5-2.png" width="100%"/>
 
-By specifying the type = “Subgroup effect”, we plot the covariate
-effects for each subgroup.
+By specifying the type = "Subgroup effect", we plot the covariate effects for each subgroup.
 
 ``` r
 plot(cv.fit, type = "Subgroup effects")

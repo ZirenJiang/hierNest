@@ -52,6 +52,12 @@ jobs:
 
     steps:
       - uses: r-hub/actions/checkout@v1
+      - name: Install system dependencies (OpenMP)
+        run: |
+          if command -v apt-get > /dev/null 2>&1; then
+            apt-get update -y && apt-get install -y libomp-dev
+          fi
+        shell: bash
       - uses: r-hub/actions/platform-info@v1
         with:
           token: ${{ secrets.RHUB_TOKEN }}
