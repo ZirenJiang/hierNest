@@ -40,7 +40,7 @@
 #' so the most influential variables appear on the left.
 #'
 #' @seealso \code{\link{coef.cv.hierNest}}, \code{\link{cv.hierNest}}
-#' @importFrom stats median coef
+#' @importFrom stats median coef setNames
 #' @export
 plot_contribution <- function(object,
                               newx,
